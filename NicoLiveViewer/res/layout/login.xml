@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:text=" "
         android:textAppearance="?android:attr/textAppearanceSmall" />
-        </TableRow>
+
     	<Button
         android:id="@+id/btn_loginAlert"
         android:layout_width="wrap_content"

@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">NicoLiveViewer(仮)</string>
-	<color name="openview">#ffffcc</color>
+    <color name="openview">#ffffcc</color>
     <color name="orange">#ff9900</color>
     <color name="button">#ffcc66</color>
+
 </resources>
