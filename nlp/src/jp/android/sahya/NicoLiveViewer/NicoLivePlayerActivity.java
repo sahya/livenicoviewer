@@ -82,11 +82,11 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
                 CheckBox checkBox = (CheckBox) v;
                 // チェックボックスのチェック状態を取得します
                 boolean checked = checkBox.isChecked();
-                Toast.makeText(this,
+                Toast.makeText(v.getContext(),
                         "onClick():" + String.valueOf(checked),
                         Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
     }
     
     public void onClick(View v){
