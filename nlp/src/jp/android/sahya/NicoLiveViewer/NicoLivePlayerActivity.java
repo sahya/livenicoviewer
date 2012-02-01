@@ -23,22 +23,22 @@ import android.widget.VideoView;
 public class NicoLivePlayerActivity extends Activity implements OnClickListener, OnReceiveListener, Handler.Callback {
 	private EditText email; 
 	private EditText password;
-	//’Êí‚ÌƒƒOƒCƒ“‚ğ‚·‚é
+	//ï¿½Êï¿½Ìƒï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private Button btnLogin;
-	//ƒAƒ‰[ƒgóM—p‚ÌƒƒOƒCƒ“‚ğ‚·‚éi’Êí‚ÌƒƒOƒCƒ“‚µ‚½ƒAƒJƒEƒ“ƒg‚ÍƒƒOƒAƒEƒg‚·‚é‚±‚Æ‚Í‚È‚¢j
+	//ï¿½Aï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½Mï¿½pï¿½Ìƒï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Êï¿½Ìƒï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½Íƒï¿½ï¿½Oï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½é‚±ï¿½Æ‚Í‚È‚ï¿½ï¿½j
 	private Button btnLoginAlert;
-	//”Ô‘gID:lv000000000‚©‚ç”Ô‘gî•ñ‚ğæ“¾‚µ‚ÄƒRƒƒ“ƒgƒT[ƒo‚ÉÚ‘±‚µ‚Ü‚·
-	//¡ŒãA•ú‘—Video‚àæ“¾‚µ‚½‚¢
+	//ï¿½Ô‘gID:lv000000000ï¿½ï¿½ï¿½ï¿½Ô‘gï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ÄƒRï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Tï¿½[ï¿½oï¿½ÉÚ‘ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
+	//ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½Videoï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private Button btnLiveNo;
-	//ƒRƒƒ“ƒgƒT[ƒo‚Ü‚½‚ÍƒAƒ‰[ƒgƒRƒƒ“ƒgƒT[ƒo‚©‚ç‚ÌÚ‘±‚ğØ‚è‚Ü‚·
+	//ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Tï¿½[ï¿½oï¿½Ü‚ï¿½ï¿½ÍƒAï¿½ï¿½ï¿½[ï¿½gï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Tï¿½[ï¿½oï¿½ï¿½ï¿½ï¿½ÌÚ‘ï¿½ï¿½ï¿½Ø‚ï¿½Ü‚ï¿½
 	private Button btnDisconnect;
-	//”Ô‘gID“ü—Í—“A‚¶‚Â‚ÍƒpƒXƒ[ƒh—“‚ğÄ—˜—p‚µ‚Ä‚¢‚Ü‚·
+	//ï¿½Ô‘gIDï¿½ï¿½Í—ï¿½ï¿½Aï¿½ï¿½ï¿½Â‚Íƒpï¿½Xï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½Ä—ï¿½ï¿½pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½
 	private EditText etLiveNo;
-	//ó‘Ô•\¦AƒRƒƒ“ƒg•\¦	
+	//ï¿½ï¿½Ô•\ï¿½ï¿½ï¿½Aï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½\ï¿½ï¿½	
 	private EditText etResponse;
-	//•\¦‚ğPassword‚©‚ç”Ô‘gID‚É‘‚«Š·‚¦‚Ä‚¢‚Ü‚·
+	//ï¿½\ï¿½ï¿½ï¿½ï¿½Passwordï¿½ï¿½ï¿½ï¿½Ô‘gIDï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½
 	private TextView tvPassword;
-	//ƒrƒfƒI•\¦‚µ‚½‚¢
+	//ï¿½rï¿½fï¿½Iï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private VideoView video;
 	
 	private NicoMessage nicoMesssage = null;
@@ -74,19 +74,19 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
         nico = new NicoRequest(nicoMesssage);
         
         CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
-        // ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ìƒ`ƒFƒbƒNó‘Ô‚ğİ’è‚µ‚Ü‚·
+        // ï¿½`ï¿½Fï¿½bï¿½Nï¿½{ï¿½bï¿½Nï¿½Xï¿½Ìƒ`ï¿½Fï¿½bï¿½Nï¿½ï¿½Ô‚ï¿½İ’è‚µï¿½Ü‚ï¿½
         checkBox.setChecked(true);
-        // ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ªƒNƒŠƒbƒN‚³‚ê‚½‚ÉŒÄ‚Ño‚³‚ê‚éƒR[ƒ‹ƒoƒbƒNƒŠƒXƒi[‚ğ“o˜^‚µ‚Ü‚·
+        // ï¿½`ï¿½Fï¿½bï¿½Nï¿½{ï¿½bï¿½Nï¿½Xï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½ÉŒÄ‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½Xï¿½iï¿½[ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½Ü‚ï¿½
         checkBox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox checkBox = (CheckBox) v;
-                // ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ìƒ`ƒFƒbƒNó‘Ô‚ğæ“¾‚µ‚Ü‚·
+                // ï¿½`ï¿½Fï¿½bï¿½Nï¿½{ï¿½bï¿½Nï¿½Xï¿½Ìƒ`ï¿½Fï¿½bï¿½Nï¿½ï¿½Ô‚ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½Ü‚ï¿½
                 boolean checked = checkBox.isChecked();
-                Toast.makeText(this,
+                Toast.makeText(v.getContext(),
                         "onClick():" + String.valueOf(checked),
                         Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
     }
     
     public void onClick(View v){
@@ -210,15 +210,15 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 		switch (message.what){
 			case R.id.btn_login :{
 				if (nico.isLogin()){
-					tvPassword.setText("”Ô‘gID");
+					tvPassword.setText("ï¿½Ô‘gID");
 					password.setText("lv");
 					password.setInputType(InputType.TYPE_CLASS_NUMBER);
 					btnLogin.setVisibility(View.GONE);
 					btnLoginAlert.setVisibility(View.GONE);
 					btnLiveNo.setVisibility(View.VISIBLE);
-					Toast.makeText(this, "ƒƒOƒCƒ“‚µ‚Ü‚µ‚½", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "ï¿½ï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 				}else{
-					Toast.makeText(this, "ƒƒOƒCƒ“‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "ï¿½ï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			}
@@ -230,7 +230,7 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
         			btnDisconnect.setVisibility(View.VISIBLE);
         			//playVideo(uri);
     			}else{
-    				Toast.makeText(this, "”Ô‘g‚ÉÚ‘±‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½", Toast.LENGTH_SHORT).show();
+    				Toast.makeText(this, "ï¿½Ô‘gï¿½ÉÚ‘ï¿½ï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
     				
     			}
     			
@@ -245,7 +245,7 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 					btnLoginAlert.setVisibility(View.GONE);
         			btnDisconnect.setVisibility(View.VISIBLE);
 				}else{
-					Toast.makeText(this, "ƒAƒ‰[ƒgƒƒOƒCƒ“‚É¸”s‚µ‚Ü‚µ‚½", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "ï¿½Aï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½Éï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
     			}
 				
 				return true;
