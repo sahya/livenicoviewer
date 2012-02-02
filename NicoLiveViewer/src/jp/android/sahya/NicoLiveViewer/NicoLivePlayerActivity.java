@@ -1,6 +1,6 @@
 package jp.android.sahya.NicoLiveViewer;
 
-import jp.android.test.R;
+import jp.android.sahya.NicoLiveViewer.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
