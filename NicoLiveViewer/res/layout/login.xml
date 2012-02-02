@@ -20,19 +20,20 @@
         android:id="@+id/textView_mail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="login　mail address"
+        android:text="  login　mail address"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/orange"
         android:textSize="16sp" />
         
         <EditText
             android:id="@+id/et_mail"
-            android:layout_width="305dp"
+            android:layout_width="300dp"
             android:layout_height="20dp"
+            android:layout_gravity="center"
             android:inputType="textEmailAddress"
             android:text=""
             android:textColor="@color/orange"
-            android:textSize="12sp"
+            android:textSize="16sp"
              >
         
 		</EditText>
@@ -40,7 +41,7 @@
         android:id="@+id/et_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="login password"
+        android:text="  login password"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/orange"
         android:textSize="16sp"
@@ -49,9 +50,14 @@
     	<EditText
     	    android:id="@+id/et_password"
     	    android:layout_width="match_parent"
-    	    android:layout_height="29dp"
+    	    android:layout_width="300dp"
+    	    android:layout_height="20dp"
+    	    android:layout_gravity="center"
     	    android:inputType="textPassword"
-    	    android:text="" />
+    	    android:text=""
+    	    android:textColor="@color/orange"
+            android:textSize="16sp"
+    	     />
     	    
 	<LinearLayout
 	    android:layout_width="fill_parent"
