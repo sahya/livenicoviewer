@@ -3,6 +3,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    <!--
+	アップロードテスト
+	-->
+    
 	<LinearLayout
 		android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -26,12 +30,12 @@
     	    android:textColor="@color/orange" 
     	    android:visibility="gone"
     	     />
-    	
+
 	</LinearLayout>
 
-	<VideoView
-	    android:id="@+id/videoview"
-	    android:layout_width="match_parent"
+	<WebView
+    	android:id="@+id/webView1"
+    	android:layout_width="match_parent"
 	    android:layout_height="190dp" />
 
 	<LinearLayout
