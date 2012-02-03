@@ -37,8 +37,8 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 		private VideoView video;
 		
 		private NicoMessage nicoMesssage = null;
-		private NicoRequest nico = null;
-		private NicoSocket nicosocket = null;
+		private NicoRequest nico ;
+		private NicoSocket nicosocket;
 		private int _senderID = 0;
 		public void onCreate(Bundle savedInstanceState) {
 		    super.onCreate(savedInstanceState);
@@ -54,7 +54,8 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 		        //tvPassword = (TextView)findViewById(R.id.tv_password);
 		        video = (VideoView)findViewById(R.id.videoview);
 		}
-	    public void onClick(View v){
+		
+		    public void onClick(View v){
 	    	switch (v.getId()) {
 				case R.id.btnLive : {
 					if(nicosocket.isConnected()){

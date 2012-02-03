@@ -3,6 +3,7 @@ package jp.android.sahya.NicoLiveViewer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,6 +55,8 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
         super.onCreate(savedInstanceState);
                 
         setContentView(R.layout.login);
+        
+        
         email = (EditText)findViewById(R.id.et_mail);
         password = (EditText)findViewById(R.id.et_password);
         btnLogin = (Button)findViewById(R.id.btn_login);
@@ -217,6 +220,10 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 					btnLoginAlert.setVisibility(View.GONE);
 					btnLiveNo.setVisibility(View.VISIBLE);
 					Toast.makeText(this, "ログインしました", Toast.LENGTH_SHORT).show();
+					// インテントのインスタンス生成
+					Intent intent = new Intent(NicoLivePlayerActivity.this, NicoMainviewActivity.class);
+					// 次画面のアクティビティ起動
+					startActivity(intent);
 				}else{
 					Toast.makeText(this, "ログインできませんでした", Toast.LENGTH_SHORT).show();
 				}
