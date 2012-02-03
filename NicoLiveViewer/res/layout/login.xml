@@ -92,30 +92,7 @@
         android:visibility="visible"
         />
     	
-    	<Button
-    	    android:id="@+id/btnLive"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:text="Live" 
-    	    android:background="@color/button"
-    	    android:textColor="@color/orange" 
-    	    android:visibility="gone"
-    	    />
-    	
-    	<Button
-    	    android:id="@+id/btnDisconnect"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:text="Disconnect"
-    	    android:background="@color/button"
-    	    android:textColor="@color/orange" 
-    	    android:visibility="gone"
-    	     />
-    	
-    	
-	</LinearLayout>
-
-	<CheckBox
+    	<CheckBox
 	    android:id="@+id/checkbox"
 	    android:layout_width="236dp"
 	    android:layout_height="21dp"
@@ -123,19 +100,6 @@
 	    android:textColor="@color/orange"
 	    android:textSize="16sp" />
     	
-    	<EditText
-        android:id="@+id/ed_response"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="responce"
-        android:textColor="@color/orange" 
-        android:background="@color/openview"
-        android:scrollHorizontally="true" />
-
-    	<VideoView 
-    	    android:id="@+id/videoview"
-    		android:layout_width="match_parent"
-    		android:layout_height="match_parent"
-    		/>
+    	
     	
 </LinearLayout>

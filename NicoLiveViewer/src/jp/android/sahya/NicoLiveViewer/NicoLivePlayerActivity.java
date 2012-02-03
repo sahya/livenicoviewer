@@ -10,6 +10,7 @@ import android.os.Message;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -51,8 +52,8 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
                 
+        setContentView(R.layout.login);
         email = (EditText)findViewById(R.id.et_mail);
         password = (EditText)findViewById(R.id.et_password);
         btnLogin = (Button)findViewById(R.id.btn_login);
@@ -65,7 +66,7 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
         btnDisconnect.setOnClickListener(this);
         etLiveNo = (EditText)findViewById(R.id.et_password);
         etResponse = (EditText)findViewById(R.id.ed_response);
-        tvPassword = (TextView)findViewById(R.id.tv_password);
+        //tvPassword = (TextView)findViewById(R.id.tv_password);
         video = (VideoView)findViewById(R.id.videoview);
         
         //

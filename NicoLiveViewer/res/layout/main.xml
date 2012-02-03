@@ -3,10 +3,66 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+	<LinearLayout
+		android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+    <Button
+    	    android:id="@+id/btnLive"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Live" 
+    	    android:background="@color/button"
+    	    android:textColor="@color/orange" 
+    	    android:visibility="gone"
+    	    />
+    	
+    	<Button
+    	    android:id="@+id/btnDisconnect"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Disconnect"
+    	    android:background="@color/button"
+    	    android:textColor="@color/orange" 
+    	    android:visibility="gone"
+    	     />
+    	
+	</LinearLayout>
+
+	<VideoView
+	    android:id="@+id/videoview"
+	    android:layout_width="match_parent"
+	    android:layout_height="190dp" />
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-         />
+	<LinearLayout
+	    android:id="@+id/linearLayout1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >
+
+		<EditText
+		    android:id="@+id/et_commentpost"
+		    android:layout_width="245dp"
+		    android:layout_height="25dp"
+		    android:layout_weight="1" >
+
+		    <requestFocus />
+		</EditText>
+
+		<Button
+		    android:id="@+id/btn_commentpost"
+		    android:layout_width="35dp"
+		    android:layout_height="match_parent"
+		    android:text="Button" />
+
+	</LinearLayout>
+
+	<EditText
+	    android:id="@+id/ed_response"
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:background="@color/openview"
+	    android:scrollHorizontally="true"
+	    android:text="responce"
+	    android:textColor="@color/orange" />
 
 </LinearLayout>
