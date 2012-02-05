@@ -5,57 +5,62 @@
     android:orientation="vertical"
     android:background="@color/openview"
      >
+
     
 
-    
         <TextView
-        android:id="@+id/tv_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="☆ニコニコ動画のアカウントでログイン☆"
-        android:textColor="@color/orange"
-        android:textSize="15sp"
-        />
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="☆ニコニコ動画のアカウントでログイン☆"
+            android:textColor="@color/orange"
+            android:textSize="15sp" />
+
+		<LinearLayout
+		    android:id="@+id/linearLayout1"
+		    android:layout_width="300dp"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center"
+		    android:orientation="vertical" >
+        
         <TextView
-        android:id="@+id/textView_mail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="  login　mail address"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/orange"
-        android:textSize="16sp" />
-        
+            android:id="@+id/textView_mail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  login mail address"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/orange"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/et_mail"
             android:layout_width="300dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:inputType="textEmailAddress"
-            android:text=""
+            android:textColor="@color/orange" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/et_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  login password"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/orange"
-            >
-        
-		</EditText>
-		<TextView
-        android:id="@+id/et_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="  login password"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/orange"
-        android:textSize="16sp"
-         />
-            
-    	<EditText
-    	    android:id="@+id/et_password"
-    	    android:layout_width="300dp"
-    	    android:layout_height="30dp"
-    	    android:layout_gravity="center"
-    	    android:inputType="textPassword"
-    	    android:text=""
-    	    android:textColor="@color/orange"
-    	     />
-    	    
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:inputType="textPassword"
+            android:textColor="@color/orange" />
+    </LinearLayout>
+
 	    <Button
 	        android:id="@+id/btn_login"
 	        android:layout_width="280dp"
@@ -94,5 +99,5 @@
 	    android:text="次回から入力を省略"
 	    android:textColor="@color/orange"
 	    android:textSize="16sp" />
-
+	
 </LinearLayout>
