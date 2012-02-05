@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,19 +29,12 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 	private Button btnLogin;
 	//アラート受信用のログインをする（通常のログインしたアカウントはログアウトすることはない）
 	private Button btnLoginAlert;
-	//番組ID:lv000000000から番組情報を取得してコメントサーバに接続します
-	//今後、放送Videoも取得したい
-	private Button btnLiveNo;
-	//コメントサーバまたはアラートコメントサーバからの接続を切ります
-	private Button btnDisconnect;
 	//番組ID入力欄、じつはパスワード欄を再利用しています
 	private EditText etLiveNo;
 	//状態表示、コメント表示	
 	private EditText etResponse;
 	//表示をPasswordから番組IDに書き換えています
 	private TextView tvPassword;
-	//ビデオ表示したい
-	private VideoView video;
 	
 	private NicoMessage nicoMesssage = null;
 	private NicoRequest nico = null;
@@ -63,15 +57,9 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
         btnLogin.setOnClickListener(this);
         btnLoginAlert = (Button)findViewById(R.id.btn_loginAlert);
         btnLoginAlert.setOnClickListener(this);
-        btnLiveNo = (Button)findViewById(R.id.btnLive);
-        btnLiveNo.setOnClickListener(this);
-        btnDisconnect = (Button)findViewById(R.id.btnDisconnect);
-        btnDisconnect.setOnClickListener(this);
         etLiveNo = (EditText)findViewById(R.id.et_password);
         etResponse = (EditText)findViewById(R.id.ed_response);
-        //tvPassword = (TextView)findViewById(R.id.tv_password);
-        video = (VideoView)findViewById(R.id.videoview);
-        
+
         //
         nicoMesssage = new NicoMessage();
         nico = new NicoRequest(nicoMesssage);
@@ -95,95 +83,49 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
     public void onClick(View v){
     	switch (v.getId()) {
     		case R.id.btn_login :{
-    			setSenderID(R.id.btn_login);
-    			key();    			
-    			final Handler handler = new Handler(this);
-    			
-    			new Thread((new Runnable(){
-    				public void run() {
-    					nico.login(email.getText().toString(),password.getText().toString());
-    					Message message = handler.obtainMessage(R.id.btn_login);
-    					handler.sendMessage(message);
-    				}})).start();
-    			
+    			login();
     			return;
 			}
     		
-    		case R.id.btnLive : {
-    			setSenderID(R.id.btnLive);
-    			key();
-    			
-    			final Handler handler = new Handler(this);
-				nicosocket = new NicoSocket(nicoMesssage);
-				nicosocket.setOnReceiveListener(this);
-    			
-    			new Thread(new Runnable(){
-					public void run() {
-						nico.getPlayerStatus(etLiveNo.getText().toString());
-						nicosocket.connectCommentServer(nico.getAddress(), nico.getPort(), nico.getThread());
-		    			Message message = handler.obtainMessage(R.id.btnLive);
-    					handler.sendMessage(message);
-					}}).start();
-    			
-    			return;
-    		}
-    		
     		case R.id.btn_loginAlert : {
-    			key();
-    			setSenderID(R.id.btn_loginAlert);
-    				
-    			final Handler handler = new Handler(this);
-    			nicosocket = new NicoSocket(nicoMesssage);
-				nicosocket.setOnReceiveListener(this);
-    			
-    			new Thread (new Runnable(){
-					public void run() {
-						nico.loginAlert(email.getText().toString(),password.getText().toString());
-						nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread());
-						Message message = handler.obtainMessage(R.id.btn_loginAlert);
-    					handler.sendMessage(message);
-					}}).start();
-    			
+    			loginAlert();
     			return;
-    		}
-    		
-    		case R.id.btnDisconnect : {
-    			switch (getSenderID()){
-    			
-    			case R.id.btnLive : {
-    				if(nicosocket.isConnected()){
-        				if(nicosocket.closeSockt()){
-        					etResponse.setText("disconnected");
-        					btnLiveNo.setVisibility(View.VISIBLE);
-        					btnDisconnect.setVisibility(View.GONE);
-        					video.stopPlayback();
-        				}
-        			}
-        			return;
-    			}
-    			case R.id.btn_loginAlert : {
-    				if(nicosocket.isConnected()){
-        				if(nicosocket.closeSockt()){
-        					etResponse.setText("disconnected");
-        					btnLogin.setVisibility(View.VISIBLE);
-        					btnLoginAlert.setVisibility(View.VISIBLE);
-        					btnDisconnect.setVisibility(View.GONE);
-        				}
-        			}
-        			return;
-    			}
-    			}
-    			
     		}
     	}
     }
-
-    private void playVideo(Uri uri){
-       video.requestFocus();
-       video.setMediaController(new MediaController(this));
-       video.setVideoURI(uri);
-       video.start();
+    
+    //Login
+    private void login(){
+    	setSenderID(R.id.btn_login);
+		key();    			
+		final Handler handler = new Handler(this);
+		
+		new Thread((new Runnable(){
+			public void run() {
+				nico.login(email.getText().toString(),password.getText().toString());
+				Message message = handler.obtainMessage(R.id.btn_login);
+				handler.sendMessage(message);
+			}})).start();
+		
     }
+    private void loginAlert(){
+    	key();
+		setSenderID(R.id.btn_loginAlert);
+			
+		final Handler handler = new Handler(this);
+		nicosocket = new NicoSocket(nicoMesssage);
+		nicosocket.setOnReceiveListener(this);
+		
+		new Thread (new Runnable(){
+			public void run() {
+				nico.loginAlert(email.getText().toString(),password.getText().toString());
+				nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread());
+				Message message = handler.obtainMessage(R.id.btn_loginAlert);
+				handler.sendMessage(message);
+			}}).start();
+    }
+
+
     public int getSenderID() {
 		return this._senderID;
 	}
@@ -212,53 +154,45 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 	public boolean handleMessage(Message message) {
 		switch (message.what){
 			case R.id.btn_login :{
-				if (nico.isLogin()){
-					tvPassword.setText("番組ID");
-					password.setText("lv");
-					password.setInputType(InputType.TYPE_CLASS_NUMBER);
-					btnLogin.setVisibility(View.GONE);
-					btnLoginAlert.setVisibility(View.GONE);
-					btnLiveNo.setVisibility(View.VISIBLE);
-					Toast.makeText(this, "ログインしました", Toast.LENGTH_SHORT).show();
-					// インテントのインスタンス生成
-					Intent intent = new Intent(NicoLivePlayerActivity.this, NicoMainviewActivity.class);
-					// 次画面のアクティビティ起動
-					startActivity(intent);
-				}else{
-					Toast.makeText(this, "ログインできませんでした", Toast.LENGTH_SHORT).show();
-				}
+				loginMessage();
 				return true;
 			}
-			
-			case R.id.btnLive : {
-    			if (nicosocket.isConnected()){
-    				new Thread(nicosocket).start();	
-        			btnLiveNo.setVisibility(View.GONE);
-        			btnDisconnect.setVisibility(View.VISIBLE);
-        			//playVideo(uri);
-    			}else{
-    				Toast.makeText(this, "番組に接続できませんでした", Toast.LENGTH_SHORT).show();
-    				
-    			}
-    			
-    			return true;
-    		}
-			
 			case R.id.btn_loginAlert : {
-				if(nicosocket.isConnected()){
-					new Thread(nicosocket.getAlertSocketRun()).start();
-					btnLiveNo.setVisibility(View.GONE);
-					btnLogin.setVisibility(View.GONE);
-					btnLoginAlert.setVisibility(View.GONE);
-        			btnDisconnect.setVisibility(View.VISIBLE);
-				}else{
-					Toast.makeText(this, "アラートログインに失敗しました", Toast.LENGTH_SHORT).show();
-    			}
-				
+				loginAlertMessage();
 				return true;
 			}
 		}
 		
 		return false;
 	}
+	
+	//Login Message
+	private void loginMessage(){
+		if (nico.isLogin()){
+			tvPassword.setText("番組ID");
+			password.setText("lv");
+			password.setInputType(InputType.TYPE_CLASS_NUMBER);
+			btnLogin.setVisibility(View.GONE);
+			btnLoginAlert.setVisibility(View.GONE);
+			Toast.makeText(this, "ログインしました", Toast.LENGTH_SHORT).show();
+			// インテントのインスタンス生成
+			Intent intent = new Intent(NicoLivePlayerActivity.this, NicoMainviewActivity.class);
+			// 次画面のアクティビティ起動
+			startActivity(intent);
+		}else{
+			Toast.makeText(this, "ログインできませんでした", Toast.LENGTH_SHORT).show();
+		}
+	}
+	//Login Alert Message
+	private void loginAlertMessage(){
+		if(nicosocket.isConnected()){
+			new Thread(nicosocket.getAlertSocketRun()).start();
+			btnLogin.setVisibility(View.GONE);
+			btnLoginAlert.setVisibility(View.GONE);
+		}else{
+			Toast.makeText(this, "アラートログインに失敗しました", Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
 }
