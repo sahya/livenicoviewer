@@ -1,6 +1,6 @@
 package jp.android.sahya.NicoLiveViewer;
+
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,10 +10,8 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 public class NicoMainviewActivity extends Activity implements OnClickListener, OnReceiveListener, Handler.Callback {
 
@@ -52,8 +50,9 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 		btnDisconnect.setOnClickListener(this);
 		etLiveNo = (EditText)findViewById(R.id.et_password);
 		etResponse = (EditText)findViewById(R.id.ed_response);
-		//tvPassword = (TextView)findViewById(R.id.tv_password);
 		video = (WebView)findViewById(R.id.webView1);
+		
+		new NicoWebView(getIntent().getStringExtra("LoginCookie"), video).loadUrl();
 	}
 
 	public void onClick(View v){
