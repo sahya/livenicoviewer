@@ -1,10 +1,8 @@
 package jp.android.sahya.NicoLiveViewer;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,14 +10,11 @@ import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 public class NicoLivePlayerActivity extends Activity implements OnClickListener, OnReceiveListener, Handler.Callback {
 	private EditText email; 
@@ -49,7 +44,7 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
                 
         setContentView(R.layout.login);
         
-        
+        tvPassword = (TextView)findViewById(R.id.tv_password);
         email = (EditText)findViewById(R.id.et_mail);
         password = (EditText)findViewById(R.id.et_password);
         btnLogin = (Button)findViewById(R.id.btn_login);
@@ -174,9 +169,12 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 			btnLogin.setVisibility(View.GONE);
 			btnLoginAlert.setVisibility(View.GONE);
 			Toast.makeText(this, "ログインしました", Toast.LENGTH_SHORT).show();
-			// インテントのインスタンス生成
-			Intent intent = new Intent(NicoLivePlayerActivity.this, NicoMainviewActivity.class);
+			
+			// インテントのインスタンス生
+			Intent intent = new Intent(this, NicoMainviewActivity.class);
 			// 次画面のアクティビティ起動
+			NicoWebView nwv = new NicoWebView(nico.getCookieStore());
+			intent.putExtra("LoginCookie", nwv.getLoginCookie());
 			startActivity(intent);
 		}else{
 			Toast.makeText(this, "ログインできませんでした", Toast.LENGTH_SHORT).show();

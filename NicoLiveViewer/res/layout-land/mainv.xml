@@ -2,70 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" 
     android:background="@color/openview"
-    >
-<!--
-	端末を横長にした時の画面
-	-->
+    android:orientation="horizontal" >
 
-		    <LinearLayout
-		        android:id="@+id/linearLayout1"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:orientation="horizontal" >
-
-	    <LinearLayout
-	        android:id="@+id/linearLayout1"
-	        android:layout_width="300dp"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
-	      
-	      <WebView
-	          android:id="@+id/webView1"
-	          android:layout_width="300dp"
-	          android:layout_height="248dp" />
+<!-- 	端末を横長にした時の画面 -->
 
-	      	<LinearLayout
-		    android:id="@+id/linearLayout1"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content" >
-
-					<EditText
-					    android:id="@+id/et_commentpost"
-					    android:layout_width="230dp"
-					    android:layout_height="25dp"
-					    android:textSize="22sp" 
-					     >
-			
-					    <requestFocus />
-					</EditText>
-			
-					<Button
-					    android:id="@+id/btn_commentpost"
-					    android:layout_width="match_parent"
-					    android:layout_height="match_parent"
-					    android:text="コメント"
-					    android:textSize="10sp" 
-					    android:textAppearance="?android:attr/textAppearanceMedium"
-	        			android:background="@color/button"
-	        			android:textColor="@color/orange"
-	        			android:visibility="visible"/>
-			
-				</LinearLayout>  
-		
-	
-	    </LinearLayout>
-
-	    <EditText
-	        android:id="@+id/ed_response"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:background="@color/openview"
-	        android:scrollHorizontally="true"
-	        android:text="responce"
-	        android:textColor="@color/orange" />
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
 
-	</LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <WebView
+                android:id="@+id/webView1"
+                android:layout_width="300dp"
+                android:layout_height="248dp" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/et_commentpost"
+                    android:layout_width="230dp"
+                    android:layout_height="25dp"
+                    android:textSize="22sp" >
+
+                    <requestFocus />
+                </EditText>
+
+                <Button
+                    android:id="@+id/btn_commentpost"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/button"
+                    android:text="コメント"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/orange"
+                    android:textSize="10sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/ed_response"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/openview"
+            android:scrollHorizontally="true"
+            android:text="responce"
+            android:textColor="@color/orange" />
+    </LinearLayout>
 
 </LinearLayout>
