@@ -19,7 +19,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        	<activity android:name="jp.android.sahya.NicoLiveViewer.NicoMainviewActivity"
+		　　　　　　android:label="@string/app_name">
+            
+　　　　</activity>
+        	<activity android:name="jp.android.sahya.NicoLiveViewer.NicoMainviewActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="live.nicovideo.jp"
+                                                     android:pathPrefix="/watch/"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
