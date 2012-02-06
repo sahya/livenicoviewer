@@ -44,10 +44,7 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
-		btnLiveNo = (Button)findViewById(R.id.btnLive);
-		btnLiveNo.setOnClickListener(this);
-		btnDisconnect = (Button)findViewById(R.id.btnDisconnect);
-		btnDisconnect.setOnClickListener(this);
+		
 		etLiveNo = (EditText)findViewById(R.id.et_password);
 		etResponse = (EditText)findViewById(R.id.ed_response);
 		video = (WebView)findViewById(R.id.webView1);
