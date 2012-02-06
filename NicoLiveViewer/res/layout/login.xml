@@ -32,10 +32,12 @@
         <EditText
             android:id="@+id/et_mail"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:inputType="textEmailAddress"
-            android:textColor="@color/orange" >
+            android:textColor="@color/orange"
+            android:textSize="20sp"
+             >
 
             <requestFocus />
         </EditText>
@@ -52,16 +54,18 @@
         <EditText
             android:id="@+id/et_password"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:inputType="textPassword"
-            android:textColor="@color/orange" />
+            android:textColor="@color/orange"
+            android:textSize="20sp"
+             />
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="280dp"
-        android:layout_height="24dp"
+        android:layout_height="35dp"
         android:layout_gravity="center"
         android:background="@color/button"
         android:text="login"
@@ -72,14 +76,14 @@
     <TextView
         android:id="@+id/space"
         android:layout_width="wrap_content"
-        android:layout_height="4dp"
+        android:layout_height="8dp"
         android:text=" "
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
         android:id="@+id/btn_loginAlert"
         android:layout_width="280dp"
-        android:layout_height="24dp"
+        android:layout_height="35dp"
         android:layout_gravity="center"
         android:background="@color/button"
         android:text="Login Alert"
