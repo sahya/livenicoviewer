@@ -14,41 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class NicoMainviewActivity extends Activity implements OnClickListener, OnReceiveListener, Handler.Callback {
-
-	private EditText email; 
-	private EditText password;
-	//通常のログインをする
-	private Button btnLogin;
-	//アラート受信用のログインをする（通常のログインしたアカウントはログアウトすることはない）
-	private Button btnLoginAlert;
-	//番組ID:lv000000000から番組情報を取得してコメントサーバに接続します
-	//今後、放送Videoも取得したい
-	private Button btnLiveNo;
-	//コメントサーバまたはアラートコメントサーバからの接続を切ります
-	private Button btnDisconnect;
-	//番組ID入力欄、じつはパスワード欄を再利用しています
-	private EditText etLiveNo;
 	//状態表示、コメント表示	
 	private EditText etResponse;
-	//表示をPasswordから番組IDに書き換えています
-	private TextView tvPassword;
 	//ビデオ表示したい
 	private WebView video;
 
-	private NicoMessage nicoMesssage = null;
-	private NicoRequest nico ;
-	private NicoSocket nicosocket;
 	private int _senderID = 0;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
-		btnLiveNo = (Button)findViewById(R.id.btnLive);
-		btnLiveNo.setOnClickListener(this);
-		btnDisconnect = (Button)findViewById(R.id.btnDisconnect);
-		btnDisconnect.setOnClickListener(this);
-		etLiveNo = (EditText)findViewById(R.id.et_password);
 		etResponse = (EditText)findViewById(R.id.ed_response);
 		video = (WebView)findViewById(R.id.webView1);
 		

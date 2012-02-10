@@ -36,7 +36,7 @@
             android:layout_gravity="center"
             android:inputType="textEmailAddress"
             android:textColor="@color/orange"
-            android:textSize="20sp"
+            android:textSize="16sp"
              >
 
             <requestFocus />
@@ -58,7 +58,7 @@
             android:layout_gravity="center"
             android:inputType="textPassword"
             android:textColor="@color/orange"
-            android:textSize="20sp"
+            android:textSize="16sp"
              />
     </LinearLayout>
 

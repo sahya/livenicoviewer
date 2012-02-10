@@ -14,7 +14,7 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/linearLayout2"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -25,7 +25,7 @@
                 android:layout_height="248dp" />
 
             <LinearLayout
-                android:id="@+id/linearLayout1"
+                android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 

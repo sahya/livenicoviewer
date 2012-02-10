@@ -5,30 +5,6 @@
     android:background="@color/openview"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btnLive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/button"
-            android:text="Live"
-            android:textColor="@color/orange"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btnDisconnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/button"
-            android:text="Disconnect"
-            android:textColor="@color/orange"
-            android:visibility="gone" />
-    </LinearLayout>
-
     <WebView
         android:id="@+id/webView1"
         android:layout_width="match_parent"

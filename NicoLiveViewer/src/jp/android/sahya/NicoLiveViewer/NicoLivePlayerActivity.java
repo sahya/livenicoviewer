@@ -127,12 +127,7 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
     	this._senderID = senderID;
     }
     public void onReceive(String receivedMessege){
-    	switch (this.getSenderID()){
-    		case R.id.btnLive :{
-    			etResponse.append(receivedMessege + "\n");
-    			return;
-    		}
-    		
+    	switch (this.getSenderID()){ 		
     		case R.id.btn_loginAlert : {
     			etResponse.append(receivedMessege + "\n");
     			return;
