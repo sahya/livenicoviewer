@@ -91,6 +91,9 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
     //Login
     private void login(){
     	setSenderID(R.id.btn_login);
+    	//ログインボタンをdisableにする
+    	btnLogin.setEnabled(false);
+    	btnLoginAlert.setEnabled(false);
 		key();    			
 		final Handler handler = new Handler(this);
 		
@@ -105,7 +108,10 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
     private void loginAlert(){
     	key();
 		setSenderID(R.id.btn_loginAlert);
-			
+		//ログインボタンをdisableにする
+    	btnLogin.setEnabled(false);
+    	btnLoginAlert.setEnabled(false);
+    	
 		final Handler handler = new Handler(this);
 		nicosocket = new NicoSocket(nicoMesssage);
 		nicosocket.setOnReceiveListener(this);
@@ -175,6 +181,9 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 			startActivity(intent);
 		}else{
 			Toast.makeText(this, "ログインできませんでした", Toast.LENGTH_SHORT).show();
+			//ログインボタンをenableにする
+	    	btnLogin.setEnabled(true);
+	    	btnLoginAlert.setEnabled(true);
 		}
 	}
 	//Login Alert Message
@@ -185,6 +194,9 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 			btnLoginAlert.setVisibility(View.GONE);
 		}else{
 			Toast.makeText(this, "アラートログインに失敗しました", Toast.LENGTH_SHORT).show();
+			//ログインボタンをenableにする
+	    	btnLogin.setEnabled(true);
+	    	btnLoginAlert.setEnabled(true);
 		}
 	}
 	
