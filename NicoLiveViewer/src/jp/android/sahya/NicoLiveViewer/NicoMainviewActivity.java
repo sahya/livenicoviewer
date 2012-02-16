@@ -20,8 +20,20 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 	private WebView video;
 
 	private int _senderID = 0;
-	public void onCreate(Bundle savedInstanceState) {
+	
+		protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//実機傾けた時
+		if (savedInstanceState != null){
+		video = new WebView(this);
+		//
+		video.restoreState(savedInstanceState);
+		//
+		setContentView(R.layout.main);
+		return;
+		}
+
+		//
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
@@ -47,4 +59,7 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 	public boolean handleMessage(Message message) {
 		return false;
 	}
-}
+	protected void onSaveInstanceState(Bundle outState) {
+	video.saveState(outState);
+	}
+}//クラスを閉じれない・・・
