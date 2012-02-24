@@ -50,31 +50,20 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 		etResponse = (EditText)findViewById(R.id.ed_response);
 		video = (WebView)findViewById(R.id.webView1);
 		
-		if (savedInstanceState != null){
-			new NicoWebView(getIntent().getStringExtra("LoginCookie"), video);
-			video.restoreState(savedInstanceState);
-		} else {
-			new NicoWebView(getIntent().getStringExtra("LoginCookie"), video).loadUrl();
-		}
+		new NicoWebView(getIntent().getStringExtra("LoginCookie"), video).loadUrl();
 	}
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
 	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState){
+		video.restoreState(savedInstanceState);
+	}
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		video.saveState(outState);
-	}
-	@Override
-	protected void onPause() {
-		//video.saveState(getIntent().getExtras());
-	}
-	@Override
-	protected void onResume(){
-		if (getIntent().getExtras() != null){
-			new NicoWebView(getIntent().getStringExtra("LoginCookie"), video);
-			video.restoreState(getIntent().getExtras());
-		}
 	}
 
 	public void onClick(View v){

@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class NicoWebView {
-	private final static String CONNECT_URL = "http://sp.live.nicovideo.jp/";
+	public final static String CONNECT_URL = "http://sp.live.nicovideo.jp/";
 	private String _loadUrl = "";
 	private WebView webview = null;
 	private CookieSyncManager cookieSyncManager = null;

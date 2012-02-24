@@ -152,15 +152,14 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 		switch (message.what){
 			case R.id.btn_login :{
 				loginMessage();
-				return true;
+				break;
 			}
 			case R.id.btn_loginAlert : {
 				loginAlertMessage();
-				return true;
+				break;
 			}
 		}
-		
-		return false;
+		return true;
 	}
 	
 	//Login Message
@@ -172,7 +171,6 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 			btnLogin.setVisibility(View.GONE);
 			btnLoginAlert.setVisibility(View.GONE);
 			Toast.makeText(this, "ログインしました", Toast.LENGTH_SHORT).show();
-			
 			// インテントのインスタンス生
 			Intent intent = new Intent(this, NicoMainviewActivity.class);
 			// 次画面のアクティビティ起動
