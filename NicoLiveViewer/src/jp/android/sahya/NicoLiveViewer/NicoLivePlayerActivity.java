@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NicoLivePlayerActivity extends Activity implements OnClickListener, OnReceiveListener, Handler.Callback {
+public class NicoLivePlayerActivity extends Activity {
 	private EditText email; 
 	private EditText password;
 	//通常のログインをする
@@ -32,10 +32,7 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
 	
 	private NicoMessage nicoMesssage = null;
 	private NicoRequest nico = null;
-	private NicoSocket nicosocket = null;
-	private int _senderID = 0;
-	//private final int ON_ARERT_ID = -1;
-	
+	private NicoSocket nicosocket = null;	
 	
     /** Called when the activity is first created. */
     @Override
@@ -48,9 +45,9 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
         email = (EditText)findViewById(R.id.et_mail);
         password = (EditText)findViewById(R.id.et_password);
         btnLogin = (Button)findViewById(R.id.btn_login);
-        btnLogin.setOnClickListener(this);
+        btnLogin.setOnClickListener(new Login());
         btnLoginAlert = (Button)findViewById(R.id.btn_loginAlert);
-        btnLoginAlert.setOnClickListener(this);
+        btnLoginAlert.setOnClickListener(new LoginAlert());
         etLiveNo = (EditText)findViewById(R.id.et_password);
         etResponse = (EditText)findViewById(R.id.ed_response);
 
@@ -74,129 +71,101 @@ public class NicoLivePlayerActivity extends Activity implements OnClickListener,
             });
     }
     
-    public void onClick(View v){
-    	switch (v.getId()) {
-    		case R.id.btn_login :{
-    			login();
-    			return;
+    /**
+     * Login処理
+     */
+    class Login implements OnClickListener, Handler.Callback {
+    	@Override
+		public void onClick(View arg0) {
+	    	//ログインボタンをdisableにする
+	    	btnLogin.setEnabled(false);
+	    	btnLoginAlert.setEnabled(false);
+			key();    			
+			final Handler handler = new Handler(this);
+			
+			new Thread((new Runnable(){
+				public void run() {
+					nico.login(email.getText().toString(),password.getText().toString());
+					Message message = handler.obtainMessage(R.id.btn_login);
+					handler.sendMessage(message);
+				}})).start();
+		}
+    	
+		@Override
+		public boolean handleMessage(Message arg0) {
+			if (nico.isLogin()){
+				tvPassword.setText("番組ID");
+				password.setText("lv");
+				password.setInputType(InputType.TYPE_CLASS_NUMBER);
+				btnLogin.setVisibility(View.GONE);
+				btnLoginAlert.setVisibility(View.GONE);
+				Toast.makeText(getApplicationContext(), "ログインしました", Toast.LENGTH_SHORT).show();
+				// インテントのインスタンス生
+				Intent intent = new Intent(getApplicationContext(), NicoMainviewActivity.class);
+				// 次画面のアクティビティ起動
+				NicoWebView nwv = new NicoWebView(nico.getCookieStore());
+				intent.putExtra("LoginCookie", nwv.getLoginCookie());
+				startActivity(intent);
+			}else{
+				Toast.makeText(getApplicationContext(), "ログインできませんでした", Toast.LENGTH_SHORT).show();
+				//ログインボタンをenableにする
+		    	btnLogin.setEnabled(true);
+		    	btnLoginAlert.setEnabled(true);
 			}
-    		
-    		case R.id.btn_loginAlert : {
-    			loginAlert();
-    			return;
-    		}
-    	}
+			
+			return true;
+		}
     }
     
-    //Login
-    private void login(){
-    	setSenderID(R.id.btn_login);
-    	//ログインボタンをdisableにする
-    	btnLogin.setEnabled(false);
-    	btnLoginAlert.setEnabled(false);
-		key();    			
-		final Handler handler = new Handler(this);
-		
-		new Thread((new Runnable(){
-			public void run() {
-				nico.login(email.getText().toString(),password.getText().toString());
-				Message message = handler.obtainMessage(R.id.btn_login);
-				handler.sendMessage(message);
-			}})).start();
-		
-    }
-    private void loginAlert(){
-    	key();
-		setSenderID(R.id.btn_loginAlert);
-		//ログインボタンをdisableにする
-    	btnLogin.setEnabled(false);
-    	btnLoginAlert.setEnabled(false);
+    /**
+     * LoginAlert処理
+     */
+    class LoginAlert implements OnClickListener, Handler.Callback ,OnReceiveListener {
+    	@Override
+		public void onClick(View v) {
+    		key();
+    		//ログインボタンをdisableにする
+        	btnLogin.setEnabled(false);
+        	btnLoginAlert.setEnabled(false);
+        	
+    		final Handler handler = new Handler(this);
+    		nicosocket = new NicoSocket(nicoMesssage);
+    		nicosocket.setOnReceiveListener(this);
+    		
+    		new Thread (new Runnable(){
+    			public void run() {
+    				nico.loginAlert(email.getText().toString(),password.getText().toString());
+    				nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread());
+    				Message message = handler.obtainMessage(R.id.btn_loginAlert);
+    				handler.sendMessage(message);
+    			}}).start();
+		}
     	
-		final Handler handler = new Handler(this);
-		nicosocket = new NicoSocket(nicoMesssage);
-		nicosocket.setOnReceiveListener(this);
-		
-		new Thread (new Runnable(){
-			public void run() {
-				nico.loginAlert(email.getText().toString(),password.getText().toString());
-				nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread());
-				Message message = handler.obtainMessage(R.id.btn_loginAlert);
-				handler.sendMessage(message);
-			}}).start();
-    }
-
-
-    public int getSenderID() {
-		return this._senderID;
-	}
-    public void setSenderID(int senderID){
-    	this._senderID = senderID;
-    }
-    public void onReceive(String receivedMessege){
-    	switch (this.getSenderID()){
-    		
-    		
-    		case R.id.btn_loginAlert : {
-    			etResponse.append(receivedMessege + "\n");
-    			return;
+    	@Override
+		public boolean handleMessage(Message msg) {
+    		if(nicosocket.isConnected()){
+    			new Thread(nicosocket.getAlertSocketRun()).start();
+    			btnLogin.setVisibility(View.GONE);
+    			btnLoginAlert.setVisibility(View.GONE);
+    		}else{
+    			Toast.makeText(getApplicationContext(), "アラートログインに失敗しました", Toast.LENGTH_SHORT).show();
+    			//ログインボタンをenableにする
+    	    	btnLogin.setEnabled(true);
+    	    	btnLoginAlert.setEnabled(true);
     		}
-    	}
+			return true;
+		}
+    	
+		@Override
+		public void onReceive(String receivedMessege) {
+			etResponse.append(receivedMessege + "\n");
+		}	
     }
     
     private void key(){
     	InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
-
-	public boolean handleMessage(Message message) {
-		switch (message.what){
-			case R.id.btn_login :{
-				loginMessage();
-				break;
-			}
-			case R.id.btn_loginAlert : {
-				loginAlertMessage();
-				break;
-			}
-		}
-		return true;
-	}
-	
-	//Login Message
-	private void loginMessage(){
-		if (nico.isLogin()){
-			tvPassword.setText("番組ID");
-			password.setText("lv");
-			password.setInputType(InputType.TYPE_CLASS_NUMBER);
-			btnLogin.setVisibility(View.GONE);
-			btnLoginAlert.setVisibility(View.GONE);
-			Toast.makeText(this, "ログインしました", Toast.LENGTH_SHORT).show();
-			// インテントのインスタンス生
-			Intent intent = new Intent(this, NicoMainviewActivity.class);
-			// 次画面のアクティビティ起動
-			NicoWebView nwv = new NicoWebView(nico.getCookieStore());
-			intent.putExtra("LoginCookie", nwv.getLoginCookie());
-			startActivity(intent);
-		}else{
-			Toast.makeText(this, "ログインできませんでした", Toast.LENGTH_SHORT).show();
-			//ログインボタンをenableにする
-	    	btnLogin.setEnabled(true);
-	    	btnLoginAlert.setEnabled(true);
-		}
-	}
-	//Login Alert Message
-	private void loginAlertMessage(){
-		if(nicosocket.isConnected()){
-			new Thread(nicosocket.getAlertSocketRun()).start();
-			btnLogin.setVisibility(View.GONE);
-			btnLoginAlert.setVisibility(View.GONE);
-		}else{
-			Toast.makeText(this, "アラートログインに失敗しました", Toast.LENGTH_SHORT).show();
-			//ログインボタンをenableにする
-	    	btnLogin.setEnabled(true);
-	    	btnLoginAlert.setEnabled(true);
-		}
-	}
 	
 	@Override
 	protected void onNewIntent(Intent intent) {

@@ -89,7 +89,7 @@ public class NicoFile {
 	}
 	
 	public boolean canReadFile(Activity activity){
-		if (!activity.getDir(saveFileName,Context.MODE_PRIVATE).exists()){ return false; }
+		if (!activity.getFileStreamPath(saveFileName).exists()){ return false; }
 		if (activity.getFileStreamPath(saveFileName).canRead()){ return true; }
 		return false;
 	}

@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NicoMainviewActivity extends Activity implements OnClickListener, OnReceiveListener, Handler.Callback {
+public class NicoMainviewActivity extends Activity {
 
 	private EditText email; 
 	private EditText password;
@@ -34,24 +34,98 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 	private EditText etResponse;
 	//表示をPasswordから番組IDに書き換えています
 	private TextView tvPassword;
-	//ビデオ表示したい
+	//ビデオ表示
 	private WebView video;
+	private String url = "";
+	private String _liveID = "";
 
 	private NicoMessage nicoMesssage = null;
-	private NicoRequest nico ;
-	private NicoSocket nicosocket;
-	private int _senderID = 0;
+	private NicoRequest nicoRequest = null;
+	private NicoSocket nicosocket = null;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
-		
+
 		etLiveNo = (EditText)findViewById(R.id.et_password);
 		etResponse = (EditText)findViewById(R.id.ed_response);
 		video = (WebView)findViewById(R.id.webView1);
-		
-		new NicoWebView(getIntent().getStringExtra("LoginCookie"), video).loadUrl();
+
+		nicoMesssage = new NicoMessage();
+		nicoRequest = new NicoRequest(nicoMesssage);
+		//クッキーを受け取る
+		nicoRequest.setLoginCookie(getIntent().getStringExtra("LoginCookie"));
+		NicoWebView nwv = new NicoWebView(nicoRequest.getLoginCookie(), video);
+
+		//ニコ生ページをロードする
+		nwv.loadUrl();
+		url = NicoWebView.CONNECT_URL;
+		//WebViewがページを読み込みを開始した時のイベント通知ハンドラを設定
+		nwv.setOnPageStartedHandler(new Handler(new ChangedUrlHandler()));
 	}
+	/**
+	 * WebViewのURL変更時の処理
+	 */
+	class ChangedUrlHandler implements Handler.Callback {
+		public boolean handleMessage(Message message) {
+			switch (message.what){
+			case NicoWebView.ON_PAGE_STARTED:
+				if (isChangedUrl(message.obj.toString())){
+					getComment();
+					return true;
+				}
+				break;
+			}
+
+			return false;
+		}
+	}
+	private boolean isChangedUrl(String url){
+		if (!this.url.equals(url)){
+			this.url = url;
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * 放送ページのコメント取得処理
+	 */
+	private void getComment() {
+		_liveID = nicoMesssage.getLiveID(url);
+		if (_liveID.equals("")){ return; }
+
+		CommentHandler commentHandler = new CommentHandler();
+		final Handler handler = new Handler(commentHandler);
+		nicosocket = new NicoSocket(nicoMesssage);
+		nicosocket.setOnReceiveListener(commentHandler);
+
+		new Thread(new Runnable(){
+			public void run() {
+				nicoRequest.getPlayerStatus(_liveID);
+				nicosocket.connectCommentServer(nicoRequest.getAddress(), nicoRequest.getPort(), nicoRequest.getThread());
+				Message message = handler.obtainMessage();
+				handler.sendMessage(message);
+			}}).start();
+	}
+	class CommentHandler implements Handler.Callback, OnReceiveListener{
+		public boolean handleMessage(Message msg) {
+			if (nicosocket.isConnected()){
+				new Thread(nicosocket).start();	
+			}else{
+				etResponse.setText("番組に接続できませんでした");
+			}
+
+			return true;
+		}
+
+		public void onReceive(String receivedMessege){
+			etResponse.append(receivedMessege + "\n");
+		}
+	}
+
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -64,22 +138,5 @@ public class NicoMainviewActivity extends Activity implements OnClickListener, O
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		video.saveState(outState);
-	}
-
-	public void onClick(View v){
-
-	}
-
-	public int getSenderID() {
-		return this._senderID;
-	}
-	public void setSenderID(int senderID){
-		this._senderID = senderID;
-	}
-	public void onReceive(String receivedMessege){
-		
-	}
-	public boolean handleMessage(Message message) {
-		return false;
 	}
 }
