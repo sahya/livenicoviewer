@@ -19,7 +19,7 @@ public class NicoCrypt {
 	 */
 	private static String algorithm = "AES";
 
-	public static byte[]  encrypt(String key, String text)
+	public static byte[] encrypt(String key, String text)
 	{
 		try {
 			SecretKeySpec sksSpec =  new SecretKeySpec(key.getBytes(), algorithm);
@@ -31,7 +31,7 @@ public class NicoCrypt {
 		}
 	}
 
-	public static String  decrypt(String key, byte[] encrypted)
+	public static String decrypt(String key, byte[] encrypted)
 	{
 		try {
 			SecretKeySpec sksSpec =  new SecretKeySpec(key.getBytes(), algorithm);
