@@ -11,7 +11,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.app.Activity;
 
-
 public class NicoFile {
 	private final String FileNotFound = "ƒtƒ@ƒCƒ‹‚ª‚Ý‚Â‚©‚è‚Ü‚¹‚ñ";
 	private String errStatus = null;
@@ -25,11 +24,11 @@ public class NicoFile {
 		return errStatus;
 	}
 	
-	public boolean saveFile(Activity activity, Object saveData){
+	public boolean saveFile(Context applicationContext, Object saveData){
 		ObjectOutputStream oos = null;
 		
 		try {
-			oos = new ObjectOutputStream(activity.openFileOutput(saveFileName, Context.MODE_PRIVATE));
+			oos = new ObjectOutputStream(applicationContext.openFileOutput(saveFileName, Context.MODE_PRIVATE));
 		} catch (FileNotFoundException e) {
 			errStatus = FileNotFound;
 			return false;
@@ -55,6 +54,18 @@ public class NicoFile {
 		
 		errStatus = "";
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @return NicoInfoData
+	 */
+	public Object openFile(Context applicationContext){
+		try {
+			return openFile(applicationContext.openFileInput(saveFileName));
+		} catch (FileNotFoundException e) {
+			return null;
+		}
 	}
 	/**
 	 * FileInputStream fis = activity.openFileInput(filename);
@@ -88,9 +99,9 @@ public class NicoFile {
 		return true;
 	}
 	
-	public boolean canReadFile(Activity activity){
-		if (!activity.getFileStreamPath(saveFileName).exists()){ return false; }
-		if (activity.getFileStreamPath(saveFileName).canRead()){ return true; }
+	public boolean canReadFile(Context applicationContext){
+		if (!applicationContext.getFileStreamPath(saveFileName).exists()){ return false; }
+		if (applicationContext.getFileStreamPath(saveFileName).canRead()){ return true; }
 		return false;
 	}
 }
