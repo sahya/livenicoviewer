@@ -5,5 +5,8 @@
     <color name="openview">#ffffcc</color>
     <color name="orange">#ff9900</color>
     <color name="button">#ffdf80</color>
+    <string name="dialog_message01">終了しますか?</string>
+    <string name="Yes">はい</string>
+    <string name="No">いいえ</string>
 
 </resources>
