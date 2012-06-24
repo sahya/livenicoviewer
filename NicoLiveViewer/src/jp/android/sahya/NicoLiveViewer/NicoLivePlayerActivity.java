@@ -120,6 +120,7 @@ public class NicoLivePlayerActivity extends Activity {
 				NicoWebView nwv = new NicoWebView(nico.getCookieStore());
 				intent.putExtra("LoginCookie", nwv.getLoginCookie());
 				startActivity(intent);
+				finish();
 			}else{
 				Toast.makeText(getApplicationContext(), "ログインできませんでした", Toast.LENGTH_SHORT).show();
 				//ログインボタンをenableにする

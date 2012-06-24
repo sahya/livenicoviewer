@@ -145,74 +145,33 @@ public class NicoMainviewActivity extends Activity {
 		video.saveState(outState);
 		}
 	
-	//二回戻るボタンをタップすると終了処理
+	
+	//戻るボタンをタップすると終了処理
 	public boolean onKeyDown(int keyCode, KeyEvent event) {  
-	        if(keyCode == KeyEvent.KEYCODE_BACK){  
-	            if(Rbstar==0) { //閲覧モード  
-	                //そのままActivity終了  
-	                return super.onKeyDown(keyCode, event);  
-	            } else { //編集モード  
-	                //ダイアログの表示  
-	                AlertDialog.Builder ad=new AlertDialog.Builder(this);  
-	                ad.setMessage(getString(R.string.dialog_message01));  
-	                ad.setPositiveButton(getString(R.string.Yes),
-	                		new DialogInterface.OnClickListener() {  
-	                    public void onClick(DialogInterface dialog, int whichButton) {  
-	                        //OKならActivity終了  
-	                        finish();  
-	                    }     
-	                });  
-	                ad.setNegativeButton(getString(R.string.No), new DialogInterface.OnClickListener() {  
-	                    public void onClick(DialogInterface dialog, int whichButton) {  
-	                        //NOならそのまま何もしない  
-	                           
-	                    }     
-	                });  
-	                ad.create();  
-	                ad.show();  
-	                return false;  
-	            }  
-	        }else{  
-	            return super.onKeyDown(keyCode, event);  
-	        }  
-	     // //////////////////////タイマー/////////////
-	       
+		if(keyCode == KeyEvent.KEYCODE_BACK){  
 
-	    }  
-	Timer setRbtimer = null;
-	boolean RbChk = false;
-	 public void backCountStart() {
-	        // 動いてたらそのまま
-	        if (RbChk) {
-	        // 止まってたら起動
-	        } else {
+			//ダイアログの表示  
+			AlertDialog.Builder ad=new AlertDialog.Builder(this);  
+			ad.setMessage(getString(R.string.dialog_message01));  
+			ad.setPositiveButton(getString(R.string.Yes),
+					new DialogInterface.OnClickListener() {  
+				public void onClick(DialogInterface dialog, int whichButton) {  
+					//OKならActivity終了  
+					finish(); 
+					
+				}     
+			});  
+			ad.setNegativeButton(getString(R.string.No), new DialogInterface.OnClickListener() {  
+				public void onClick(DialogInterface dialog, int whichButton) {  
+					//NOならそのまま何もしない  
 
-	        setRbtimer = new Timer(true);
-	        setRbtimer.schedule(new TimerTask() {
-	        @Override
-	        public void run() {
-	        int Rbcount=0;
-	        Rbstar = 0;
-			if(Rbcount == 2){
-	        Rbstar =0;
-	        Rbcount = 0;
-	        backCountStop();
-	        }
-	        Rbcount++;
-	        }
-	        }, 500, 500); // 初回起動の遅延と周期指定。単位はms
-	        RbChk = true;
-	        }
-	        }
+				}     
+			});  
+			ad.create();  
+			ad.show();  
+			return false;  
+		} 
+		return true;
+	}  
 
-	        public void backCountStop() {
-	        // 動いてたら入る、止まってたらスルー
-	        if (RbChk) {
-	        if (setRbtimer != null) {
-	        setRbtimer.cancel();
-	        setRbtimer = null;
-	        }
-	        RbChk = false;
-	        }
-	        }
 }
