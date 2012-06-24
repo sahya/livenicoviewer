@@ -90,8 +90,7 @@ public class NicoLivePlayerActivity extends Activity {
     class Login implements OnClickListener, Handler.Callback, Runnable {
 		final Handler handler = new Handler(this);
 		
-    	@Override
-		public void onClick(View v) {
+    	public void onClick(View v) {
 	    	//ログインボタンをdisableにする
 	    	btnLogin.setEnabled(false);
 	    	btnLoginAlert.setEnabled(false);
@@ -104,7 +103,6 @@ public class NicoLivePlayerActivity extends Activity {
 			handler.sendMessage(message);
 		}
     	
-		@Override
 		public boolean handleMessage(Message arg0) {
 			if (nico.isLogin()){
 				//チェックが付いていればログインデータを保存する
@@ -159,8 +157,7 @@ public class NicoLivePlayerActivity extends Activity {
     class LoginAlert implements OnClickListener, Handler.Callback ,OnReceiveListener, Runnable {
     	final Handler handler = new Handler(this);
     	
-    	@Override
-		public void onClick(View v) {
+    	public void onClick(View v) {
     		key();
     		//ログインボタンをdisableにする
         	btnLogin.setEnabled(false);
@@ -178,8 +175,7 @@ public class NicoLivePlayerActivity extends Activity {
 			handler.sendMessage(message);
 		}
     	
-    	@Override
-		public boolean handleMessage(Message msg) {
+    	public boolean handleMessage(Message msg) {
     		if(nicosocket.isConnected()){
     			new Thread(nicosocket.getAlertSocketRun()).start();
     			btnLogin.setVisibility(View.GONE);
@@ -193,7 +189,6 @@ public class NicoLivePlayerActivity extends Activity {
 			return true;
 		}
     	
-		@Override
 		public void onReceive(String receivedMessege) {
 			etResponse.append(receivedMessege + "\n");
 		}	
