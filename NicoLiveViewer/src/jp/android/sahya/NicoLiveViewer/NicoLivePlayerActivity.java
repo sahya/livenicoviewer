@@ -171,14 +171,14 @@ public class NicoLivePlayerActivity extends Activity {
     	
     	public void run() {
 			nico.loginAlert(email.getText().toString(),password.getText().toString());
-			nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread());
+			nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread(), "1");
 			Message message = handler.obtainMessage(R.id.btn_loginAlert);
 			handler.sendMessage(message);
 		}
     	
     	public boolean handleMessage(Message msg) {
     		if(nicosocket.isConnected()){
-    			new Thread(nicosocket.getAlertSocketRun()).start();
+    			new Thread(nicosocket.getAlertSocketRunnable()).start();
     			btnLogin.setVisibility(View.GONE);
     			btnLoginAlert.setVisibility(View.GONE);
     		}else{
@@ -190,8 +190,8 @@ public class NicoLivePlayerActivity extends Activity {
 			return true;
 		}
     	
-		public void onReceive(String receivedMessege) {
-			etResponse.append(receivedMessege + "\n");
+		public void onReceive(String[] receivedMessege) {
+			etResponse.append(receivedMessege[0] + ":" + receivedMessege[1] + ":" + receivedMessege[2] +"\n");
 		}	
     }
     

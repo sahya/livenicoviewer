@@ -3,6 +3,8 @@ package jp.android.sahya.NicoLiveViewer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jp.android.sahya.NicoLiveViewer.NicoSocket.NicoLiveComment;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -44,10 +46,14 @@ public class NicoMainviewActivity extends Activity {
 	private WebView video;
 	private String _url = "";
 	private String _liveID = "";
+	//Comment Post
+	private EditText etCommentPost;
+	private Button btnCommentPost;
+	private NicoLiveComment nicoLiveComment;
 
-	private NicoMessage nicoMesssage = null;
+	private NicoMessage nicoMessage = null;
 	private NicoRequest nicoRequest = null;
-	private NicoSocket nicosocket = null;
+
 	private int Rbstar = 0;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +64,13 @@ public class NicoMainviewActivity extends Activity {
 		etLiveNo = (EditText)findViewById(R.id.et_password);
 		etResponse = (EditText)findViewById(R.id.ed_response);
 		video = (WebView)findViewById(R.id.webView1);
+		etCommentPost = (EditText)findViewById(R.id.et_commentpost);
+		btnCommentPost = (Button)findViewById(R.id.btn_commentpost);
+		
+		btnCommentPost.setOnClickListener(new SendComment());
 
-		nicoMesssage = new NicoMessage();
-		nicoRequest = new NicoRequest(nicoMesssage);
+		nicoMessage = new NicoMessage();
+		nicoRequest = new NicoRequest(nicoMessage);
 		//クッキーを受け取る
 		nicoRequest.setLoginCookie(getIntent().getStringExtra("LoginCookie"));
 		NicoWebView nwv = new NicoWebView(nicoRequest.getLoginCookie(), video);
@@ -99,36 +109,62 @@ public class NicoMainviewActivity extends Activity {
 	/**
 	 * 放送ページのコメント取得処理
 	 */
-	class GetComment implements Handler.Callback, OnReceiveListener, Runnable {
+	class GetComment implements Runnable, Handler.Callback, OnReceiveListener {
 		final Handler handler = new Handler(this);
 
 		private void getComment() {
-			_liveID = nicoMesssage.getLiveID(_url);
+			_liveID = nicoMessage.getLiveID(_url);
 			if (_liveID.equals("")){ return; }
-			nicosocket = new NicoSocket(nicoMesssage);
-			nicosocket.setOnReceiveListener(this);
 			new Thread(this).start();
 		}
 		
 		public void run() {
 			nicoRequest.getPlayerStatus(_liveID);
-			nicosocket.connectCommentServer(nicoRequest.getAddress(), nicoRequest.getPort(), nicoRequest.getThread());
+			NicoSocket nicoSocket = new NicoSocket(nicoMessage);
+            nicoSocket.setOnReceiveListener(this);
+			nicoLiveComment = nicoSocket.startNicoLiveComment(nicoRequest, _liveID);
 			Message message = handler.obtainMessage();
 			handler.sendMessage(message);
 		}
 		
 		public boolean handleMessage(Message msg) {
-			if (nicosocket.isConnected()){
-				new Thread(nicosocket).start();	
+			if (nicoLiveComment.isConnected()){
+				new Thread(nicoLiveComment).start();	
 			}else{
 				etResponse.setText("番組に接続できませんでした");
 			}
 			return true;
 		}
 
-		public void onReceive(String receivedMessege){
-			etResponse.append(receivedMessege + "\n");
+		public void onReceive(String[] receivedMessege){
+			if (receivedMessege[0].equals("chatresult")) {
+				etCommentPost.setText(nicoLiveComment.getComment());
+			}
+        	else {
+        		etResponse.append(receivedMessege[0] + ":" +  receivedMessege[1] + "\n" + receivedMessege[2] + "\n");
+        	}
 		}
+	}
+	class SendComment implements OnClickListener, Runnable, Handler.Callback {
+		final Handler handler = new Handler(this);
+		
+		public void onClick(View v) {
+			new Thread(this).start();
+		}
+		
+		public void run() {
+			if (nicoLiveComment == null || nicoLiveComment.isConnected() == false){
+         		return;
+         	}
+         	nicoLiveComment.send(etCommentPost.getText().toString());
+			Message message = handler.obtainMessage();
+			handler.sendMessage(message);
+		}
+		
+		public boolean handleMessage(Message msg) {
+			return true;
+		}
+
 	}
 
 
