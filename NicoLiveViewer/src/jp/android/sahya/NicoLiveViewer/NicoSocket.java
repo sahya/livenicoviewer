@@ -274,9 +274,11 @@ public class NicoSocket implements Runnable{
 			String postkey = nicoRequest.getPostkey(playerStatusData.getThread(), heartBeat.getCommentNo());
 			if (postkey == null || postkey.isEmpty()){
 				_postkey = "";
+				return;
 			}
 			if (postkey.equals(_postkey)){
 				_postkey = "";
+				return;
 			}
 			_postkey = postkey;
 		}
