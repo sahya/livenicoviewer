@@ -115,8 +115,8 @@ public class NicoMainviewActivity extends Activity {
 		//Replace Word
 		//hb ifseetno=ÈˆÚ“®, perm=•\¦‚È‚µ,info 2•\¦‚È‚µ
 		private final Pattern _hb_ifseetnoPattern  = Pattern.compile("^/hb ifseetno.*");
-		private final Pattern _permPattern  = Pattern.compile("^/perm.*");
-		private final Pattern _info_2Pattern  = Pattern.compile("^/info 2.*");
+		private final Pattern _permPattern  = Pattern.compile("^/perm(.*)");
+		private final Pattern _info_2Pattern  = Pattern.compile("^/info 2(.*)");
 
 		private void getComment() {
 			_liveID = nicoMessage.getLiveID(_url, true);
@@ -164,20 +164,20 @@ public class NicoMainviewActivity extends Activity {
 			if (receivedMessege[0].equals("chatresult")) {
 				return false;
 			}
-			Matcher matcher = _permPattern.matcher(receivedMessege[2]);
-			if(matcher.matches()){
-				return false;
-			}
-			matcher = _info_2Pattern.matcher(receivedMessege[2]);
-			if(matcher.matches()){
-				return false;
-			}
 			return true;
 		}
 		private String[] replaceCommentWord(String[] receivedMessege){
 			Matcher matcher = _hb_ifseetnoPattern.matcher(receivedMessege[2]);
 			if(matcher.matches()){
 				return new String[] { receivedMessege[0], receivedMessege[1], "ÈˆÚ“®"};
+			}
+			matcher = _permPattern.matcher(receivedMessege[2]);
+			if(matcher.matches()){
+				return new String[] { receivedMessege[0], receivedMessege[1], matcher.group(1)};
+			}
+			matcher = _info_2Pattern.matcher(receivedMessege[2]);
+			if(matcher.matches()){
+				return new String[] { receivedMessege[0], receivedMessege[1], matcher.group(1)};
 			}
 			
 			return receivedMessege;
