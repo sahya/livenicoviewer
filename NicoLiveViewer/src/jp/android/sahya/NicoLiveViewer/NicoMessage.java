@@ -23,6 +23,7 @@ public class NicoMessage {
 	private final Pattern _chatresultpattern = Pattern.compile("<chat_result thread=\".+\" status=\"([0-9])\" .+/>");
 	private final Pattern _liveLvPattern = Pattern.compile("http://sp.live.nicovideo.jp/watch/(lv[0-9]+)");
 	private final Pattern _liveComuPattern = Pattern.compile("http://sp.live.nicovideo.jp/watch/(co[0-9]+)");
+	private final Pattern _liveChannelPattern = Pattern.compile("http://sp.live.nicovideo.jp/watch/(ch[0-9]+).*");
 	
 	private final Pattern _nicoLiveLvPattern = Pattern.compile(".*(lv[0-9]+).*");
 	private final Pattern _nicoLiveComuPattern = Pattern.compile(".*(co[0-9]+).*");
@@ -106,7 +107,7 @@ public class NicoMessage {
 		Matcher matcher = _nicoLiveChannelPattern.matcher(data);
 		return matcher.matches();
 	}
-	public String getLiveID (String url){
+	public String getLiveID (String url, boolean isSpMode){
 		Matcher matcher = _liveLvPattern.matcher(url);
 		if(matcher.matches()){
 			return matcher.group(1);
@@ -115,6 +116,15 @@ public class NicoMessage {
 		matcher = _liveComuPattern.matcher(url);
 		if (matcher.matches()){
 			return matcher.group(1);
+		}
+		
+		matcher = _liveChannelPattern.matcher(url);
+		if (matcher.matches()){
+			return matcher.group(1);
+		}
+		
+		if (isSpMode) {
+			return "";
 		}
 		
 		matcher = _nicoLiveComuPattern.matcher(url);
