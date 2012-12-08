@@ -1,6 +1,7 @@
 package jp.android.sahya.NicoLiveViewer;
 
 import java.util.List;
+
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import android.graphics.Bitmap;
@@ -21,7 +22,9 @@ public class NicoWebView {
 	private WebViewClient client = null;
 	private String _loginCookie =null;
 	private Handler onPageStartedHandler = null;
+	private Handler onPageFinishedHandler = null;
 	public final static int ON_PAGE_STARTED = 0;
+	public final static int ON_PAGE_FINISHED = 1;
 	
 	public NicoWebView(String loginCookie) {
 		this._loginCookie = loginCookie;
@@ -52,7 +55,7 @@ public class NicoWebView {
 		WebSettings settings=webview.getSettings();
 		settings.setPluginsEnabled(true);
 		settings.setJavaScriptEnabled(true);
-		settings.setBlockNetworkImage(true);
+		//settings.setBlockNetworkImage(true);
 		
 		cookieSyncManager = CookieSyncManager.createInstance(this.webview.getContext());
 		cookieSyncManager.startSync();
@@ -68,14 +71,30 @@ public class NicoWebView {
 	public void setOnPageStartedHandler(final Handler onPageStartedHandler){
 		this.onPageStartedHandler = onPageStartedHandler;
 	}
+	/**
+	 * ページの読み込み完了を通知するハンドラを登録する
+	 * @param onPageStartedHandler
+	 */
+	public void setOnPageFinishedHandler(final Handler onPageFinishedHandler){
+		this.onPageFinishedHandler = onPageFinishedHandler;
+	}
 	public WebViewClient getWebViewClient(){
 		return this.client;
+	}
+	public WebView getWebView(){
+		return this.webview;
 	}
 	public void loadUrl(){
 		loadUrl(this._loadUrl);
 	}
 	public void loadUrl(String loadUrl){
 		this.webview.loadUrl(loadUrl);
+	}
+	public void loadData(String lodaData){
+		this.webview.loadData(lodaData, "text/html", null);
+	}
+	public void loadDataWithBaseURL (String lodaData){
+		this.webview.loadDataWithBaseURL("http://sp.live.nicovideo.jp/watch/" ,lodaData, "text/html", null, "http://sp.live.nicovideo.jp/");
 	}
 	public String getLoginCookie(){
 		return this._loginCookie;
@@ -103,7 +122,7 @@ public class NicoWebView {
 		return false;
 	}
 	
-	/*
+	/**
 	 *    NicoWebViewClient
 	 */
 	class NicoWebViewClient extends WebViewClient {
@@ -118,11 +137,6 @@ public class NicoWebView {
     		setCookieManeger();
     		setCookie();
     	}
-    	@Override
-    	public void onPageFinished(WebView wv, String url){
-    		setCookieManeger();
-    		setCookie();
-    	}
     	
     	/** 
     	 * ページの読み込みを通知する
@@ -132,6 +146,20 @@ public class NicoWebView {
     	public void onPageStarted(WebView view, String url, Bitmap favicon){
     		Message message = onPageStartedHandler.obtainMessage(ON_PAGE_STARTED, url);
     		onPageStartedHandler.sendMessage(message);
+    	}
+    	
+    	/** 
+    	 * ページの読み込み完了を通知する
+    	 * @see android.webkit.WebViewClient#onPageFinished(android.webkit.WebView, java.lang.String)
+    	 */
+    	@Override
+    	public void onPageFinished(WebView view, String url){
+    		setCookieManeger();
+    		setCookie();
+    		if (onPageFinishedHandler != null){
+    			Message message = onPageFinishedHandler.obtainMessage(ON_PAGE_FINISHED, url);
+    			onPageFinishedHandler.sendMessage(message);
+    		}
     	}
     	
     	private void setCookie(){

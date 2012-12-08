@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HostnameVerifier;
 
-import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -377,7 +376,34 @@ public class NicoRequest {
 		PlayerStatusData playerStatusData = new PlayerStatusData("アラートログインに失敗しました");
 		return playerStatusData;
 	}
-
+	
+	/**
+	 * ユーザIDからユーザー名を取得します
+	 * NicoRequest nicoRequest = new NicoRequest(nicoMessage);
+	 * nicoRequest.setLoginCookie(user_session_cookie);
+	 * NicoUserData userData =  new NicoUserData("userID","");
+	 * nicoRequest.setUserData(userData);
+	 * @param userData
+	 */
+	public void setUserData(NicoUserData userData){
+		try{
+			DefaultHttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
+			client.setCookieStore(_cookieStore);
+			HttpGet post = new HttpGet(_userid + userData.UserID);
+			post.addHeader("User-Agent", "NicoLiveAlert 1.2.0");
+			post.addHeader("Host", "www.nicovideo.jp");
+			HttpResponse response = client.execute(new HttpHost(_wwwhost, 80, "http"), post);			
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+				//
+				if (response.getEntity().isStreaming()){
+					userData.UserName = nicoMessage.gerUserName(getResponceContents(response));
+				}
+			}
+		} catch (Exception e){
+			System.out.println("errer " + e.getMessage());
+		}
+	}
+	
 	private InputStream getInputStream(HttpResponse response) throws IllegalStateException, IOException{
 		return response.getEntity().getContent();
 	}

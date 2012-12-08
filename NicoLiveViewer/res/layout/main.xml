@@ -43,14 +43,9 @@
             android:textSize="10sp"
             android:visibility="visible" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/ed_response"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:background="@color/openview"
-        android:scrollHorizontally="true"
-        android:text="responce"
-        android:textColor="@color/orange" />
+    <ListView
+        android:id="@+id/commentListView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
