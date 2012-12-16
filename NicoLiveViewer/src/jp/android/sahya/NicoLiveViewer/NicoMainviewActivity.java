@@ -1,10 +1,9 @@
 package jp.android.sahya.NicoLiveViewer;
 
-import jp.android.sahya.NicoLiveViewer.NicoSocket.NicoLiveComment;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.android.sahya.NicoLiveViewer.NicoSocket.NicoLiveComment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,14 +13,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class NicoMainviewActivity extends Activity {
 
