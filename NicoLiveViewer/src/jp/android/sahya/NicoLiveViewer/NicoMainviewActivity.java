@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,14 +38,14 @@ public class NicoMainviewActivity extends Activity {
 
 	private NicoMessage nicoMessage = null;
 	private NicoRequest nicoRequest = null;
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
+		getWindow().setSoftInputMode(
+    	WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		etCommentPost = (EditText)findViewById(R.id.ed_response);
-		btnCommentPost = (Button)findViewById(R.id.btn_commentpost);		
 		btnCommentPost.setOnClickListener(new SendComment());
 		_commentList = new NicoCommentListView((ListView)findViewById(R.id.commentListView2), getApplicationContext());
 
@@ -61,7 +62,23 @@ public class NicoMainviewActivity extends Activity {
         _nicoWebView.setOnPageStartedHandler(new Handler(new ChangedUrlHandler()));
         //WebViewがページを読み込みを完了した時のイベント通知ハンドラを設定
         _nicoWebView.setOnPageFinishedHandler(new Handler(new OnPageFinishedHandler()));
-	}
+        /**
+        ed.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                // フォーカスを受け取ったとき
+                if(hasFocus){
+                    // ソフトキーボードを表示する
+                    inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+                }
+                // フォーカスが外れたとき
+                else{
+                    // ソフトキーボードを閉じる
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
+                }
+                **/
+      	}
 	/**
      * WebViewのURL変更時の処理
      */
@@ -75,7 +92,7 @@ public class NicoMainviewActivity extends Activity {
     			if (isChangedUrl(message.obj.toString())){
     				_liveID = nicoMessage.getLiveID(_url, true);
     	        	if (_liveID.equals("")){ return false; }
-    				new GetComment().getComment();  	        	
+    				new GetComment().getComment();
     				return true;
     			}
     			break;
@@ -96,13 +113,13 @@ public class NicoMainviewActivity extends Activity {
 			if (msg.what == NicoWebView.ON_PAGE_FINISHED){
 	        	if (nicoMessage.getLiveID(msg.obj.toString(), true).equals("")){ return false; }
 	        	_nicoWebView.loadDataWithBaseURL(_css +_embed1 + _liveID + _embed2);
-	        	
+
 	        	return true;
 			}
 			return false;
 		}
 	}
-	
+
 
 	/**
 	 * 放送ページのコメント取得処理
@@ -120,7 +137,7 @@ public class NicoMainviewActivity extends Activity {
 			if (_liveID.equals("")){ return; }
 			new Thread(this).start();
 		}
-		
+
 		public void run() {
 			nicoRequest.getPlayerStatus(_liveID);
 			NicoSocket nicoSocket = new NicoSocket(nicoMessage);
@@ -129,7 +146,7 @@ public class NicoMainviewActivity extends Activity {
 			Message message = handler.obtainMessage();
 			handler.sendMessage(message);
 		}
-		
+
 		public boolean handleMessage(Message msg) {
 			if (nicoLiveComment.isConnected()){
 				new Thread(nicoLiveComment).start();
@@ -176,17 +193,17 @@ public class NicoMainviewActivity extends Activity {
 			if(matcher.matches()){
 				return new String[] { receivedMessege[0], receivedMessege[1], matcher.group(1)};
 			}
-			
+
 			return receivedMessege;
 		}
 	}
 	class SendComment implements OnClickListener, Runnable, Handler.Callback {
 		final Handler handler = new Handler(this);
-		
+
 		public void onClick(View v) {
 			new Thread(this).start();
 		}
-		
+
 		public void run() {
 			if (nicoLiveComment == null || nicoLiveComment.isConnected() == false){
          		return;
@@ -195,7 +212,7 @@ public class NicoMainviewActivity extends Activity {
 			Message message = handler.obtainMessage();
 			handler.sendMessage(message);
 		}
-		
+
 		public boolean handleMessage(Message msg) {
 			return true;
 		}
@@ -215,33 +232,33 @@ public class NicoMainviewActivity extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		_nicoWebView.getWebView().saveState(outState);
 		}
-	
-	
+
+
 	//戻るボタンをタップすると終了処理
-	public boolean onKeyDown(int keyCode, KeyEvent event) {  
-		if(keyCode == KeyEvent.KEYCODE_BACK){  
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
 
-			//ダイアログの表示  
-			AlertDialog.Builder ad=new AlertDialog.Builder(this);  
-			ad.setMessage(getString(R.string.dialog_message01));  
+			//ダイアログの表示
+			AlertDialog.Builder ad=new AlertDialog.Builder(this);
+			ad.setMessage(getString(R.string.dialog_message01));
 			ad.setPositiveButton(getString(R.string.Yes),
-					new DialogInterface.OnClickListener() {  
-				public void onClick(DialogInterface dialog, int whichButton) {  
-					//OKならActivity終了  
-					finish(); 
-					
-				}     
-			});  
-			ad.setNegativeButton(getString(R.string.No), new DialogInterface.OnClickListener() {  
-				public void onClick(DialogInterface dialog, int whichButton) {  
-					//NOならそのまま何もしない  
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					//OKならActivity終了
+					finish();
 
-				}     
-			});  
-			ad.create();  
-			ad.show();  
-			return false;  
-		} 
+				}
+			});
+			ad.setNegativeButton(getString(R.string.No), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					//NOならそのまま何もしない
+
+				}
+			});
+			ad.create();
+			ad.show();
+			return false;
+		}
 		return true;
-	}  
+	}
 }

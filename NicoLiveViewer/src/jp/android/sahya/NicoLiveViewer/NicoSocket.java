@@ -1,6 +1,5 @@
 package jp.android.sahya.NicoLiveViewer;
 
-import android.annotation.SuppressLint;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +13,7 @@ import jp.android.sahya.NicoLiveViewer.NicoMessage.ChatResult;
 import jp.android.sahya.NicoLiveViewer.NicoMessage.CommentData;
 import jp.android.sahya.NicoLiveViewer.NicoMessage.SendCommentData;
 import jp.android.sahya.NicoLiveViewer.NicoMessage.ThreadData;
+import android.annotation.SuppressLint;
 
 
 public class NicoSocket implements Runnable{
@@ -77,7 +77,7 @@ public class NicoSocket implements Runnable{
 		return SERVER_MESSAGE;
 	}
 
-	//isConnect && 
+	//isConnect &&
 	public void run(){
 		while (isConnect && _socket.isConnected()){
 			try{
@@ -106,7 +106,7 @@ public class NicoSocket implements Runnable{
 		return new Runnable(){
 			public void run() {
 				StringBuffer buff = new StringBuffer();
-				int c = -1;	
+				int c = -1;
 				while (isConnect && _socket.isConnected()){
 					try {
 						while ((c = reader.read()) != -1) {
@@ -182,7 +182,7 @@ public class NicoSocket implements Runnable{
 			nicoRequest.setLoginCookie(_cookie);
 			String commentNo = nicoRequest.getHeartbeat(_liveID);
 			System.out.println("Heartbeat:"+ _commentCount + "->" + commentNo);
-			if (! commentNo.isEmpty()){
+			if (! commentNo.equals("")){
 				_commentCount = commentNo;
 			}
 			return _commentCount;
@@ -253,10 +253,10 @@ public class NicoSocket implements Runnable{
 		}
 		public String send(String sendComment){
 			_sendComment = sendComment;
-			if (_postkey.isEmpty()){
+			if (_postkey.equals("")){
 				getPostkey();
 			}
-			if (! _postkey.isEmpty()){
+			if (! _postkey.equals("")){
 				System.out.println(sendCommentData.getSendComment(_postkey, null, _sendComment));
 				return sendMessage(sendCommentData.getSendComment(_postkey, null, _sendComment));
 			}
@@ -265,14 +265,14 @@ public class NicoSocket implements Runnable{
 		}
 		private void resend(){
 			getPostkey();
-			if ( ! _postkey.isEmpty()){
+			if ( ! _postkey.equals("")){
 				sendMessage(sendCommentData.getResendComment(_postkey));
 			}
 			System.out.println(sendCommentData.getResendComment(_postkey));
 		}
 		private void getPostkey(){
 			String postkey = nicoRequest.getPostkey(playerStatusData.getThread(), heartBeat.getCommentNo());
-			if (postkey == null || postkey.isEmpty()){
+			if (postkey == null || postkey.equals("")){
 				_postkey = "";
 				return;
 			}

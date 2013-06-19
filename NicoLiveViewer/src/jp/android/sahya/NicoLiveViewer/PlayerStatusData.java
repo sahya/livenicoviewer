@@ -30,7 +30,7 @@ public final class PlayerStatusData {
 	private String _thread;
 	public static final String OwnerName = "owner_name";
 	private String _ownerName;
-	
+
 	public PlayerStatusData(String liveID) {
 		this._liveID = liveID;
 	}
@@ -77,7 +77,7 @@ public final class PlayerStatusData {
 		this._communityID = communityID;
 	}
 	public String getCommunityName() {
-		if (this._communityName == null || this._communityName.isEmpty()){
+		if (this._communityName == null || this._communityName.equals("")){
 			return this._communityID;
 		}
 		else {
@@ -94,7 +94,7 @@ public final class PlayerStatusData {
 		this._ownerID = ownerID;
 	}
 	public String getOwnerName() {
-		if (this._ownerName == null || this._ownerName.isEmpty()){
+		if (this._ownerName == null || this._ownerName.equals("")){
 			return _ownerID;
 		}
 		else {
