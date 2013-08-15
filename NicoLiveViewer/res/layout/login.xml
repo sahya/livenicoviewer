@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/openview"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <TextView
@@ -17,8 +18,14 @@
         android:id="@+id/linearLayout1"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="279dp"
+            android:layout_height="180dp"
+            android:padding="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/android_niwango_cute" />
 
         <TextView
             android:id="@+id/textView_mail"
@@ -29,22 +36,14 @@
             android:textColor="@color/orange"
             android:textSize="16sp" />
 
-        <ImageView
-            android:layout_width="279dp"
-            android:layout_height="180dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/android_niwango_cute" />
-
         <EditText
             android:id="@+id/et_mail"
-            android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:inputType="textEmailAddress"
-            android:textColor="@color/orange" >
-
-            <requestFocus />
-        </EditText>
+            android:textColor="@color/orange"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_password"
@@ -57,18 +56,18 @@
 
         <EditText
             android:id="@+id/et_password"
-            android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:inputType="textPassword"
-            android:textColor="@color/orange" />
+            android:textColor="@color/orange"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="280dp"
         android:layout_height="24dp"
-        android:layout_gravity="center"
         android:background="@color/button"
         android:text="login"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -82,22 +81,10 @@
         android:text=" "
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <Button
-        android:id="@+id/btn_loginAlert"
-        android:layout_width="280dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center"
-        android:background="@color/button"
-        android:text="Login Alert"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/orange"
-        android:visibility="visible" />
-
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="次回から入力を省略"
         android:textColor="@color/orange"
         android:textSize="16sp" />

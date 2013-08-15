@@ -77,7 +77,7 @@ public class NicoSocket implements Runnable{
 		return SERVER_MESSAGE;
 	}
 
-	//isConnect &&
+	//isConnect && 
 	public void run(){
 		while (isConnect && _socket.isConnected()){
 			try{
@@ -106,7 +106,7 @@ public class NicoSocket implements Runnable{
 		return new Runnable(){
 			public void run() {
 				StringBuffer buff = new StringBuffer();
-				int c = -1;
+				int c = -1;	
 				while (isConnect && _socket.isConnected()){
 					try {
 						while ((c = reader.read()) != -1) {

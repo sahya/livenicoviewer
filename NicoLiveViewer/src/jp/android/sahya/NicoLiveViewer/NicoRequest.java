@@ -157,7 +157,7 @@ public class NicoRequest {
 		if (matcher.matches()){
 			setCookieStore(loginCookie);
 			setLoginCookie();
-		}
+		} 	
 	}
 	private void setLoginCookie(){
 		_loginCookie = getLoginCookie(this._cookieStore);
@@ -176,7 +176,7 @@ public class NicoRequest {
 		return cookie;
 	}
 	/**
-	 *
+	 * 
 	 * @return HttpResponse Document
 	 */
 	public Document getHttpResponse(){
@@ -187,7 +187,7 @@ public class NicoRequest {
 	 * ニコニコ動画へのログイン処理
 	 * @param mail
 	 * @param password
-	 * @return
+	 * @return 
 	 */
 	public String login (String mail, String password) {
 
@@ -211,7 +211,7 @@ public class NicoRequest {
 			client.execute(new HttpHost(_nicoHost, 443, "https"), post);
 			_cookieStore = client.getCookieStore();
 
-			/*HttpResponse response =
+			/*HttpResponse response = 
 			 * if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 					//
 					if (! _cookieStore.getCookies().equals("")){
@@ -266,7 +266,7 @@ public class NicoRequest {
 	 * ニコ生アラートへのログイン処理
 	 * @param mail
 	 * @param password
-	 * @return
+	 * @return 
 	 */
 	public String loginAlert(String mail, String password){
 		String ticket = null;
@@ -355,7 +355,7 @@ public class NicoRequest {
 			DefaultHttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
 			HttpPost post = new HttpPost(_getstreaminfo + lv);
 			post.addHeader("User-Agent", "NicoLiveAlert 1.2.0");
-			HttpResponse response = client.execute(new HttpHost(_apiHost, 80, "http"), post);
+			HttpResponse response = client.execute(new HttpHost(_apiHost, 80, "http"), post);			
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				//
 				if (response.getEntity().isStreaming()){
@@ -377,7 +377,7 @@ public class NicoRequest {
 		PlayerStatusData playerStatusData = new PlayerStatusData("アラートログインに失敗しました");
 		return playerStatusData;
 	}
-
+	
 	/**
 	 * ユーザIDからユーザー名を取得します
 	 * NicoRequest nicoRequest = new NicoRequest(nicoMessage);
@@ -393,7 +393,7 @@ public class NicoRequest {
 			HttpGet post = new HttpGet(_userid + userData.UserID);
 			post.addHeader("User-Agent", "NicoLiveAlert 1.2.0");
 			post.addHeader("Host", "www.nicovideo.jp");
-			HttpResponse response = client.execute(new HttpHost(_wwwhost, 80, "http"), post);
+			HttpResponse response = client.execute(new HttpHost(_wwwhost, 80, "http"), post);			
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				//
 				if (response.getEntity().isStreaming()){
@@ -404,7 +404,7 @@ public class NicoRequest {
 			System.out.println("errer " + e.getMessage());
 		}
 	}
-
+	
 	private InputStream getInputStream(HttpResponse response) throws IllegalStateException, IOException{
 		return response.getEntity().getContent();
 	}
@@ -477,7 +477,7 @@ public class NicoRequest {
 		String block_no = "0";
 		if (commentNo == null || commentNo.equals("")){
 			block_no = "0";
-		}
+		} 
 		else {
 			block_no = String.valueOf(Integer.valueOf(commentNo) / 100);
 		}
@@ -486,7 +486,7 @@ public class NicoRequest {
 			DefaultHttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
 			client.setCookieStore(_cookieStore);
 			HttpGet post = new HttpGet(String.format(_getpostkey, thread, block_no));
-			HttpResponse response = client.execute(new HttpHost(_apiHost, 80, "http"), post);
+			HttpResponse response = client.execute(new HttpHost(_apiHost, 80, "http"), post);			
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				//
 				if (response.getEntity().isStreaming()){
@@ -504,7 +504,7 @@ public class NicoRequest {
 			DefaultHttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
 			client.setCookieStore(_cookieStore);
 			HttpGet post = new HttpGet(_heartbeat + lv);
-			HttpResponse response = client.execute(new HttpHost(_apiHost, 80, "http"), post);
+			HttpResponse response = client.execute(new HttpHost(_apiHost, 80, "http"), post);			
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				//
 				if (response.getEntity().isStreaming()){

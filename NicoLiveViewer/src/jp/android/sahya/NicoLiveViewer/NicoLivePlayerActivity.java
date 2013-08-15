@@ -1,212 +1,215 @@
 package jp.android.sahya.NicoLiveViewer;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import jp.android.sahya.NicoLiveViewer.NicoSocket.NicoLiveComment;
 import android.app.Activity;
-import android.content.res.Configuration;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.webkit.WebView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class NicoLivePlayerActivity extends Activity {
+	private EditText email;
+	private EditText password;
+	//通常のログインをする
+	private Button btnLogin;
+	//アラート受信用のログインをする（通常のログインしたアカウントはログアウトすることはない）
+	private Button btnLoginAlert;
+	//状態表示、コメント表示
+	private EditText etResponse;
+	//表示をPasswordから番組IDに書き換えています
+	private TextView tvPassword;
+	//
+	private CheckBox checkBox;
 
-	//ビデオ表示
-	private NicoCommentListView _commentList;
-	private NicoWebView _nicoWebView;
-	private String _url = "";
-	private String _liveID = "";
-	private String _embed1 = "<embed type=\"application/x-shockwave-flash\" src=\"http://nl.nimg.jp/sp/swf/spplayer.swf?120501105350\" width=\"100%\" height=\"100%\" style=\"\" id=\"flvplayer\" name=\"flvplayer\" bgcolor=\"#FFFFFF\" quality=\"high\" allowscriptaccess=\"always\" flashvars=\"playerRev=120501105350_0&amp;playerTplRev=110721071458&amp;playerType=sp&amp;v=";
-	private String _embed2 = "&amp;lcname=&amp;pt=community&amp;category=&amp;watchVideoID=&amp;videoTitle=&amp;gameKey=&amp;gameTime=&amp;isChannel=&amp;ver=2.5&amp;userOwner=false&amp;us=0\">";
-	private String _css = "<style type=\"text/css\"> html, body { margin: 0; padding: 0; } </style>";
-	//Comment Post
-	private Button btnCommentPost;
-	private NicoLiveComment nicoLiveComment;
-	private EditText etCommentPost;
+	private NicoMessage nicoMesssage = null;
+	private NicoRequest nico = null;
+	private NicoSocket nicosocket = null;
+	private NicoFile saveDataFile = new NicoFile("NicoLiveViewerData.dat");
 
-	private NicoMessage nicoMessage = null;
-	private NicoRequest nicoRequest = null;
-	
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.main);
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
 
-		etCommentPost = (EditText)findViewById(R.id.ed_response);
-		btnCommentPost = (Button)findViewById(R.id.btn_commentpost);		
-		btnCommentPost.setOnClickListener(new SendComment());
-		_commentList = new NicoCommentListView((ListView)findViewById(R.id.commentListView2), getApplicationContext());
+        tvPassword = (TextView)findViewById(R.id.tv_password);
+        email = (EditText)findViewById(R.id.et_mail);
+        password = (EditText)findViewById(R.id.et_password);
+        btnLogin = (Button)findViewById(R.id.btn_login);
+        btnLogin.setOnClickListener(new Login());
+        /**btnLoginAlert = (Button)findViewById(R.id.btn_loginAlert);*/
+        btnLoginAlert.setOnClickListener(new LoginAlert());
+        etResponse = (EditText)findViewById(R.id.ed_response);
+        checkBox = (CheckBox) findViewById(R.id.checkbox);
+        //
+        nicoMesssage = new NicoMessage();
+        nico = new NicoRequest(nicoMesssage);
+        // チェックボックスを設定します
+        new SaveCheckBox();
+    }
 
-		nicoMessage = new NicoMessage();
-		nicoRequest = new NicoRequest(nicoMessage);
-		//クッキーを受け取る
-		nicoRequest.setLoginCookie(getIntent().getStringExtra("LoginCookie"));
-		_nicoWebView = new NicoWebView(nicoRequest.getLoginCookie(), (WebView)findViewById(R.id.webView1));
-
-		//WebViewがページを読み込みを開始した時のイベント通知ハンドラを設定
-        _nicoWebView.setOnPageStartedHandler(new Handler(new ChangedUrlHandler()));
-        //WebViewがページを読み込みを完了した時のイベント通知ハンドラを設定
-        _nicoWebView.setOnPageFinishedHandler(new Handler(new OnPageFinishedHandler()));
-	}
-	/**
-     * WebViewのURL変更時の処理
-     */
-	/**
-     * WebViewのURL変更時の処理
-     */
-    private class ChangedUrlHandler implements Handler.Callback {
-    	public boolean handleMessage(Message message) {
-    		switch (message.what){
-    		case NicoWebView.ON_PAGE_STARTED:
-    			if (isChangedUrl(message.obj.toString())){
-    				_liveID = nicoMessage.getLiveID(_url, true);
-    	        	if (_liveID.equals("")){ return false; }
-    				new GetComment().getComment();  	        	
-    				return true;
+    class SaveCheckBox implements View.OnClickListener {
+    	public SaveCheckBox(){
+    		// チェックボックスのチェック状態を設定します
+    		if (saveDataFile.canReadFile(getApplicationContext())){
+    			//ログインデータが保存されていれば、チェックボックスの状態を復元する
+    			checkBox.setChecked(((NicoInfoData)saveDataFile.openFile(getApplicationContext())).isStore);
+    			//チェックボックスが付いれいれば、メールとパスワードを復元する
+    			if (checkBox.isChecked()){
+    				email.setText(NicoCrypt.decrypt(NicoKey.getKey(),
+    						((NicoInfoData)saveDataFile.openFile(getApplicationContext())).mail));
+    				password.setText(NicoCrypt.decrypt(NicoKey.getKey(),
+    						((NicoInfoData)saveDataFile.openFile(getApplicationContext())).password));
     			}
-    			break;
+    		} else {
+    			checkBox.setChecked(true);
     		}
-    		return false;
+    		// チェックボックスがクリックされた時に呼び出されるコールバックリスナーを登録します
+    		checkBox.setOnClickListener(this);
     	}
-    	private boolean isChangedUrl(String url){
-    		if (!_url.equals(url)){
-    			_url = url;
-    			return true;
-    		}
-    		return false;
+    	public void onClick(View v) {
+    		// チェックボックスのチェック状態を取得します
+    		Toast.makeText(v.getContext(),
+    				"onClick():" + String.valueOf(checkBox.isChecked()),
+    				Toast.LENGTH_SHORT).show();
     	}
     }
-    private class OnPageFinishedHandler implements Handler.Callback {
-		@Override
-		public boolean handleMessage(Message msg) {
-			if (msg.what == NicoWebView.ON_PAGE_FINISHED){
-	        	if (nicoMessage.getLiveID(msg.obj.toString(), true).equals("")){ return false; }
-	        	_nicoWebView.loadDataWithBaseURL(_css +_embed1 + _liveID + _embed2);
-	        	
-	        	return true;
-			}
-			return false;
-		}
-	}
-	
 
-	/**
-	 * 放送ページのコメント取得処理
-	 */
-	class GetComment implements Runnable, Handler.Callback, OnReceiveListener {
+    /**
+     * Login処理
+     */
+    class Login implements OnClickListener, Handler.Callback, Runnable {
 		final Handler handler = new Handler(this);
-		//Replace Word
-		//hb ifseetno=席移動, perm=表示なし,info 2＝表示なし
-		private final Pattern _hb_ifseetnoPattern  = Pattern.compile("^/hb ifseetno.*");
-		private final Pattern _permPattern  = Pattern.compile("^/perm(.*)");
-		private final Pattern _info_2Pattern  = Pattern.compile("^/info 2(.*)");
 
-		private void getComment() {
-			_liveID = nicoMessage.getLiveID(_url, true);
-			if (_liveID.equals("")){ return; }
+    	public void onClick(View v) {
+	    	//ログインボタンをdisableにする
+	    	btnLogin.setEnabled(false);
+	    	btnLoginAlert.setEnabled(false);
+			key();
 			new Thread(this).start();
 		}
-		
-		public void run() {
-			nicoRequest.getPlayerStatus(_liveID);
-			NicoSocket nicoSocket = new NicoSocket(nicoMessage);
-            nicoSocket.setOnReceiveListener(this);
-			nicoLiveComment = nicoSocket.startNicoLiveComment(nicoRequest, _liveID);
-			Message message = handler.obtainMessage();
+    	public void run() {
+			nico.login(email.getText().toString(),password.getText().toString());
+			Message message = handler.obtainMessage(R.id.btn_login);
 			handler.sendMessage(message);
 		}
-		
-		public boolean handleMessage(Message msg) {
-			if (nicoLiveComment.isConnected()){
-				new Thread(nicoLiveComment).start();
+
+		public boolean handleMessage(Message arg0) {
+			if (nico.isLogin()){
+				//チェックが付いていればログインデータを保存する
+				saveNicoInfoData();
+
+				tvPassword.setText("番組ID");
+				password.setText("lv");
+				password.setInputType(InputType.TYPE_CLASS_NUMBER);
+				btnLogin.setVisibility(View.GONE);
+				btnLoginAlert.setVisibility(View.GONE);
+				Toast.makeText(getApplicationContext(), "ログインしました", Toast.LENGTH_SHORT).show();
+				// インテントのインスタンス生
+				Intent intent = new Intent(getApplicationContext(), NicoMainviewActivity.class);
+				// 次画面のアクティビティ起動
+				NicoWebView nwv = new NicoWebView(nico.getCookieStore());
+				intent.putExtra("LoginCookie", nwv.getLoginCookie());
+				startActivity(intent);
+				finish();
 			}else{
-				_commentList.append(new String[]{"Live ID:",_liveID,"番組に接続できませんでした"});
+				Toast.makeText(getApplicationContext(), "ログインできませんでした", Toast.LENGTH_SHORT).show();
+				//ログインボタンをenableにする
+		    	btnLogin.setEnabled(true);
+		    	btnLoginAlert.setEnabled(true);
 			}
+
+			return true;
+		}
+    }
+
+    private void saveNicoInfoData(){
+    	NicoInfoData data = new NicoInfoData();
+
+    	if (checkBox.isChecked()){
+    		data.mail = NicoCrypt.encrypt(NicoKey.getKey(), email.getText().toString());
+    		data.password = NicoCrypt.encrypt(NicoKey.getKey(), password.getText().toString());
+    		data.sessionCookie = NicoCrypt.encrypt(NicoKey.getKey(), nico.getLoginCookie());
+    		data.lastUrl = NicoWebView.CONNECT_URL;
+    		data.isStore = checkBox.isChecked();
+    	} else {
+    		data.mail = "0".getBytes();
+    		data.password = "0".getBytes();
+    		data.sessionCookie = NicoCrypt.encrypt(NicoKey.getKey(), nico.getLoginCookie());
+    		data.lastUrl = NicoWebView.CONNECT_URL;
+    		data.isStore = checkBox.isChecked();
+    	}
+
+    	saveDataFile.saveFile(getApplicationContext(), data);
+    }
+
+    /**
+     * LoginAlert処理
+     */
+    class LoginAlert implements OnClickListener, Handler.Callback ,OnReceiveListener, Runnable {
+    	final Handler handler = new Handler(this);
+
+    	public void onClick(View v) {
+    		key();
+    		//ログインボタンをdisableにする
+        	btnLogin.setEnabled(false);
+        	btnLoginAlert.setEnabled(false);
+
+    		nicosocket = new NicoSocket(nicoMesssage);
+    		nicosocket.setOnReceiveListener(this);
+    		new Thread (this).start();
+		}
+
+    	public void run() {
+			nico.loginAlert(email.getText().toString(),password.getText().toString());
+			nicosocket.connectCommentServer(nico.getAlertAddress(), nico.getAlertPort(), nico.getAlertThread(), "1");
+			// Message message = handler.obtainMessage(R.id.btn_loginAlert);
+			// handler.sendMessage(message);
+		}
+
+    	public boolean handleMessage(Message msg) {
+    		if(nicosocket.isConnected()){
+    			new Thread(nicosocket.getAlertSocketRunnable()).start();
+    			btnLogin.setVisibility(View.GONE);
+    			btnLoginAlert.setVisibility(View.GONE);
+    		}else{
+    			Toast.makeText(getApplicationContext(), "アラートログインに失敗しました", Toast.LENGTH_SHORT).show();
+    			//ログインボタンをenableにする
+    	    	btnLogin.setEnabled(true);
+    	    	btnLoginAlert.setEnabled(true);
+    		}
 			return true;
 		}
 
-		public void onReceive(String[] receivedMessege){
-        	if (hasDisplay(receivedMessege)){
-        		handler.post(new ReceivedMessege(receivedMessege));
-        	}
-			if (receivedMessege[2].equals("/disconnect") && nicoLiveComment.isConnected()){
-				nicoLiveComment.close();
-			}
+		public void onReceive(String[] receivedMessege) {
+			etResponse.append(receivedMessege[0] + ":" + receivedMessege[1] + ":" + receivedMessege[2] +"\n");
 		}
-		private class ReceivedMessege implements Runnable {
-			private String[] receivedMessege;
-			public ReceivedMessege(String[] receivedMessege){
-				this.receivedMessege = receivedMessege;
-			}
-			@Override
-			public void run() {
-				_commentList.append(replaceCommentWord(receivedMessege));
-			}
-		}
-		private boolean hasDisplay(String[] receivedMessege){
-			if (receivedMessege[0].equals("chatresult")) {
-				return false;
-			}
-			return true;
-		}
-		private String[] replaceCommentWord(String[] receivedMessege){
-			Matcher matcher = _hb_ifseetnoPattern.matcher(receivedMessege[2]);
-			if(matcher.matches()){
-				return new String[] { receivedMessege[0], receivedMessege[1], "席移動"};
-			}
-			matcher = _permPattern.matcher(receivedMessege[2]);
-			if(matcher.matches()){
-				return new String[] { receivedMessege[0], receivedMessege[1], matcher.group(1)};
-			}
-			matcher = _info_2Pattern.matcher(receivedMessege[2]);
-			if(matcher.matches()){
-				return new String[] { receivedMessege[0], receivedMessege[1], matcher.group(1)};
-			}
-			
-			return receivedMessege;
-		}
-	}
-	class SendComment implements OnClickListener, Runnable, Handler.Callback {
-		final Handler handler = new Handler(this);
-		
-		public void onClick(View v) {
-			new Thread(this).start();
-		}
-		
-		public void run() {
-			if (nicoLiveComment == null || nicoLiveComment.isConnected() == false){
-         		return;
-         	}
-         	nicoLiveComment.send(etCommentPost.getText().toString());
-			Message message = handler.obtainMessage();
-			handler.sendMessage(message);
-		}
-		
-		public boolean handleMessage(Message msg) {
-			return true;
-		}
+    }
 
-	}
-
+    private void key(){
+    	InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+
+		if( intent != null ) {
+			/** リンク先のURLを取得する。 */
+			String data = intent.getDataString();
+			if(data != null){
+				//urlを元にごにょごにょ
+			}
+		}
 	}
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState){
-		_nicoWebView.getWebView().restoreState(savedInstanceState);
-	}
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		_nicoWebView.getWebView().saveState(outState);
-		}  
 }

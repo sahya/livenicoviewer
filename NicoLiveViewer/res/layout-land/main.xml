@@ -14,29 +14,32 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <WebView
                 android:id="@+id/webView1"
                 android:layout_width="300dp"
-                android:layout_height="248dp" />
+                android:layout_height="272dp" />
+
+            <android.support.v7.widget.Space
+                android:id="@+id/space1"
+                android:layout_width="wrap_content"
+                android:layout_height="3sp" />
 
             <LinearLayout
-                android:id="@+id/linearLayout1"
+                android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <EditText
                     android:id="@+id/et_commentpost"
-                    android:layout_width="230dp"
+                    android:layout_width="232dp"
                     android:layout_height="25dp"
-                    android:textSize="22sp" >
-
-                    <requestFocus />
-                </EditText>
+                    android:ems="10"
+                    android:textSize="22sp" />
 
                 <Button
                     android:id="@+id/btn_commentpost"
@@ -50,6 +53,11 @@
                     android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
+
+        <android.support.v7.widget.Space
+            android:id="@+id/space2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/ed_response"

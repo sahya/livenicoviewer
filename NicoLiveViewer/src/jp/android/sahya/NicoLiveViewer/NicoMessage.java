@@ -20,24 +20,24 @@ public class NicoMessage {
 	private final Pattern _threadResult = Pattern.compile("<thread resultcode=\"0\".+thread=\".+ticket=\"(.+)?\" .+server_time=\"(.+)?\"/>");
 	private final Pattern chatpattern = Pattern.compile("<chat.*>(.*,.*,.*)</chat>");
 	private final Pattern chatOfficialpattern = Pattern.compile("<chat.*>(.*,.*)</chat>");
-	private final Pattern _commentChatpattern = Pattern.compile("<chat .* no=\"([0-9]*?)\" .* user_id=\"(.*?)\" .*>(.*)</chat>");
+	private final Pattern _commentChatpattern = Pattern.compile("<chat .* no=\"([0-9]*?)\" .* user_id=\"(.*?)\" .*>(.*)</chat>"); 
 	private final Pattern _chatresultpattern = Pattern.compile("<chat_result thread=\".+\" status=\"([0-9])\" .+/>");
 	private final Pattern _liveLvPattern = Pattern.compile("http://sp.live.nicovideo.jp/watch/(lv[0-9]+)");
 	private final Pattern _liveComuPattern = Pattern.compile("http://sp.live.nicovideo.jp/watch/(co[0-9]+)");
 	private final Pattern _liveChannelPattern = Pattern.compile("http://sp.live.nicovideo.jp/watch/(ch[0-9]+).*");
-
+	
 	private final Pattern _nicoLiveLvPattern = Pattern.compile(".*(lv[0-9]+).*");
 	private final Pattern _nicoLiveComuPattern = Pattern.compile(".*(co[0-9]+).*");
 	private final Pattern _nicoLiveChannelPattern = Pattern.compile(".*(ch[0-9]+).*");
 	//
 	private final Pattern _communityOwnerPattern = Pattern.compile("[.\\s\\S]*オーナー：<a href=\"http://www.nicovideo.jp/user/([0-9]+)\"[.\\s\\S]*");
 	private final Pattern _communityNamePattern = Pattern.compile("[.\\s\\S]*<h1.+>(.*)</h1>[.\\s\\S]*");
-
+	
 	private final Pattern _userNamePattern = Pattern.compile("[.\\s\\S]*<title>(.*)さんのユーザーページ ‐ niconico</title>[.\\s\\S]*");
 	public NicoMessage(){
-
+		
 	}
-
+	
 	public PlayerStatusData getPlayerStatusData(Document getplayerstatusXML){
 		PlayerStatusData playerStatusData = new PlayerStatusData(getNodeValue(getplayerstatusXML, PlayerStatusData.LIVEID));
 		playerStatusData.setUrl(getNodeValue(getplayerstatusXML, PlayerStatusData.LIVE_STRAEM_URL));
@@ -59,7 +59,7 @@ public class NicoMessage {
 		if(matcher.matches()){
 			return new String[] { matcher.group(1), matcher.group(2) };
 		}
-
+		
 		return new String[] { "", "" };
 	}
 	public Document getDocument(InputStream is) throws SAXException, IOException, ParserConfigurationException {
@@ -90,16 +90,16 @@ public class NicoMessage {
 		if(matcher.matches()){
 			return matcher.group(1).split(",");
 		}
-
+		
 		matcher = chatOfficialpattern.matcher(chatdata);
 		if(matcher.matches()){
 			String chat[] = matcher.group(1).split(",");
 			return new String[] { chat[0], chat[1], "" };
 		}
-
+		
 		return new String[] { "", "", "" };
 	}
-
+	
 	public boolean isCommunityID(String data){
 		Matcher matcher = _nicoLiveComuPattern.matcher(data);
 		return matcher.matches();
@@ -113,36 +113,36 @@ public class NicoMessage {
 		if(matcher.matches()){
 			return matcher.group(1);
 		}
-
+		
 		matcher = _liveComuPattern.matcher(url);
 		if (matcher.matches()){
 			return matcher.group(1);
 		}
-
+		
 		matcher = _liveChannelPattern.matcher(url);
 		if (matcher.matches()){
 			return matcher.group(1);
 		}
-
+		
 		if (isSpMode) {
 			return "";
 		}
-
+		
 		matcher = _nicoLiveComuPattern.matcher(url);
 		if (matcher.matches()){
 			return matcher.group(1);
 		}
-
+		
 		matcher = _nicoLiveLvPattern.matcher(url);
 		if (matcher.matches()){
 			return matcher.group(1);
 		}
-
+		
 		matcher = _nicoLiveChannelPattern.matcher(url);
 		if (matcher.matches()){
 			return matcher.group(1);
 		}
-
+		
 		return url;
 	}
 	public String gerUserName (String htmlDocument){
@@ -152,7 +152,7 @@ public class NicoMessage {
 		}
 		return "";
 	}
-
+	
 	public String getNodeValue(InputStream is, String elementsName) throws SAXException, IOException, ParserConfigurationException{
 		return getNodeValue(getDocument(is), elementsName);
 	}
@@ -169,8 +169,8 @@ public class NicoMessage {
 	public String getChatMessage(String thread, String res_from) {
 		return MessageFormat.format(this._chatMessage, thread, res_from);
 	}
-
-
+	
+	
 	public boolean getCommentMessage(BufferedReader reader, final OnReceiveListener onReceive) {
 		StringBuffer buff = new StringBuffer();
 		int c = -1;
@@ -190,7 +190,7 @@ public class NicoMessage {
 	}
 	public boolean getAlertMessage(BufferedReader reader, final OnReceiveListener onReceive) {
 		StringBuffer buff = new StringBuffer();
-		int c = -1;
+		int c = -1;	
 		try {
 			while ((c = reader.read()) != -1) {
 				if (c == '\0') {
@@ -238,7 +238,7 @@ public class NicoMessage {
 				_isThreadResult = false;
 				_obtainedThreadResult = false;
 			}
-
+			
 			matcher = _last_resPattern.matcher(threadData);
 			if(matcher.matches()){
 				_last_res = matcher.group(1);
@@ -264,7 +264,7 @@ public class NicoMessage {
 			return _server_time;
 		}
 	}
-
+	
 	public ChatResult getChatResult(){
 		return new ChatResult();
 	}
@@ -299,7 +299,7 @@ public class NicoMessage {
 				_isNextPostkey = false;
 				return;
 			}
-
+			
 			_isChatResult = false;
 			_sendMessage = false;
 			_isNextPostkey = true;
@@ -323,12 +323,12 @@ public class NicoMessage {
 			return _no;
 		}
 	}
-
+	
 	public CommentData getCommentData(PlayerStatusData playerStatusData){
 		return new CommentData(playerStatusData);
 	}
 	public class CommentData {
-		private final Pattern _commentChatpattern = Pattern.compile("<chat (.*)>([.\\s\\S]*)</chat>");
+		private final Pattern _commentChatpattern = Pattern.compile("<chat (.*)>([.\\s\\S]*)</chat>"); 
 		private final Pattern _userIDPattern = Pattern.compile(".*user_id=\"(.*?)\".*");
 		private final Pattern _noPattern = Pattern.compile(".*no=\"(.*?)\".*");
 		private final Pattern _premiumPattern = Pattern.compile(".*premium=\"(.*?)\".*");
@@ -339,10 +339,10 @@ public class NicoMessage {
 		private String _userID;
 		private String _premium;
 		private String _vpos;
-
+		
 		private String _baseTime;
 		private String _startTime;
-
+		
 		public CommentData(PlayerStatusData playerStatusData){
 			_baseTime = playerStatusData.get_base_time();
 			_startTime  = playerStatusData.get_start_time();
@@ -359,22 +359,22 @@ public class NicoMessage {
 				_userID = "";
 				_comment = chatData;
 			}
-
+			
 			matcher = _userIDPattern.matcher(_attribute);
 			if(matcher.matches()){
 				_userID = matcher.group(1);
 			}
-
+			
 			matcher = _premiumPattern.matcher(_attribute);
 			if(matcher.matches()){
 				_premium = matcher.group(1);
 			}
-
+			
 			matcher = _vposPattern.matcher(_attribute);
 			if(matcher.matches()){
 				_vpos = getTimes(matcher.group(1));
 			}
-
+			
 			matcher = _noPattern.matcher(_attribute);
 			if(matcher.matches()){
 				_no = matcher.group(1);
@@ -382,8 +382,8 @@ public class NicoMessage {
 			else {
 				_no = _vpos;
 			}
-
-
+			
+			
 			return new String[]{ _no, _userID, _comment };
 		}
 		public String getComment() {
@@ -404,7 +404,7 @@ public class NicoMessage {
 		private String getTimes(String vpos){
 			int difference = (Integer.valueOf(_baseTime) - Integer.valueOf(_startTime))*100;
 			int times = Integer.valueOf(vpos) + difference;
-
+			
 			String h = String.valueOf(times/360000);
 			String m = getPrefix(String.valueOf(times%360000/6000));
 			String s = getPrefix(String.valueOf(times%6000/100));
@@ -420,7 +420,7 @@ public class NicoMessage {
 			return data;
 		}
 	}
-
+	
 	public SendCommentData getSendCommentData(PlayerStatusData playerStatusData){
 		return new SendCommentData(playerStatusData);
 	}
@@ -448,7 +448,7 @@ public class NicoMessage {
 			else {
 				_postkey = postkey;
 			}
-			if (mail == null || mail.equals("")){
+			if (mail == null || mail.equals("")){ 
 				_mail = "184";
 			}
 			else {
